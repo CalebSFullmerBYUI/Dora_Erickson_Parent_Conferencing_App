@@ -1,0 +1,2 @@
+rootProject.name='Dora Erickson Parent Conferencing App'
+include ':app'
