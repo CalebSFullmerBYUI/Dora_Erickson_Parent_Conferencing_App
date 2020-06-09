@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ScheduleActivity"></activity>
+        <activity android:name=".DirectoryActivity"></activity>
+        <activity android:name=".ScheduleActivity" />
         <activity android:name=".LinksActivity" />
         <activity android:name=".HelpPageActivity" />
         <activity android:name=".HomePageActivity" />

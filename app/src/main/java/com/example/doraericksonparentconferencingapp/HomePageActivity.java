@@ -15,8 +15,9 @@ import android.view.View;
  */
 public class HomePageActivity extends AppCompatActivity {
     //Variables
-    private User currentUser = null;
-    private List<ScheduleItem> announcements = new ArrayList<ScheduleItem>();
+    //Uncomment these once User and ScheduleItem exist.
+    //private User currentUser = null;
+    //private List<ScheduleItem> announcements = new ArrayList<ScheduleItem>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

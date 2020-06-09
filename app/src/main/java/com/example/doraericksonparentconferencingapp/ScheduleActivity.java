@@ -13,7 +13,8 @@ import android.view.View;
  * @version 0.1
  */
 public class ScheduleActivity extends AppCompatActivity {
-    private List<ScheduleItem> scheduledItems = new ArrayList<ScheduleItem>();
+    //Uncomment this once ScheduleItem exists.
+    //private List<ScheduleItem> scheduledItems = new ArrayList<ScheduleItem>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
