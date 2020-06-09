@@ -28,18 +28,18 @@ public class HomePageActivity extends AppCompatActivity {
 
     //Backend
     /**
-     * <h3>RefreshAnnouncements()</h3>
+     * <h3>refreshAnnouncements()</h3>
      * Sends a request to the server to get the user's announcements.
      */
-    public void RefreshAnnouncements() {
+    public void refreshAnnouncements() {
 
     }
 
     /**
-     * <h3>DisplayAnnouncements()</h3>
+     * <h3>displayAnnouncements()</h3>
      * Displays the user's announcements on the screen.
      */
-    public void DisplayAnnouncements() {
+    public void displayAnnouncements() {
 
     }
 
@@ -48,76 +48,76 @@ public class HomePageActivity extends AppCompatActivity {
 
     //Start new Activity
     /**
-     * <h3>StartHelpActivity(View view)</h3>
+     * <h3>startHelpActivity(View view)</h3>
      * Creates a new instance of the HelpActivity and directs the user
      * to it.
      * @param view (Type: View, the view object which triggered the method)
      */
-    public void StartHelpActivity(View view) {
+    public void startHelpActivity(View view) {
 
     }
 
     /**
-     * <h3>StartLinksActivity(View view)</h3>
+     * <h3>startLinksActivity(View view)</h3>
      * Starts a new instance of the LinksActivity.
      * @param view (Type: View, the view object which triggered the method)
      */
-    public void StartLinksActivity(View view) {
+    public void startLinksActivity(View view) {
 
     }
 
     /**
-     * <h3>StartClassroomsActivity(View view)</h3>
+     * <h3>startClassroomsActivity(View view)</h3>
      * Creates a new instance of the ClassroomActivity. This will only
      * trigger for teacher and admin users.
      * @param view (Type: View, the view object which triggered the method)
      */
-    public void StartClassroomsActivity(View view) {
+    public void startClassroomsActivity(View view) {
 
     }
 
     /**
-     * <h3>StartDirectoryActivity(View view)</h3>
+     * <h3>startDirectoryActivity(View view)</h3>
      * Creates a new instance of the DirectoryActivity.
      * @param view (Type: View, the view object which triggered the method)
      */
-    public void StartDirectoryActivity(View view) {
+    public void startDirectoryActivity(View view) {
 
     }
 
     /**
-     * <h3>StartScheduleActivity(View view)</h3>
+     * <h3>startScheduleActivity(View view)</h3>
      * Starts a new instance of the ScheduleActivity.
      * @param view (Type: View, the view object which triggered the method)
      */
-    public void StartScheduleActivity(View view) {
+    public void startScheduleActivity(View view) {
 
     }
 
     /**
-     * <h3>StartsMessagesActivity(View view)</h3>
+     * <h3>startsMessagesActivity(View view)</h3>
      * Starts a new instance of the MessagesActivity.
      * @param view (Type: View, the view object which triggered the method)
      */
-    public void StartMessagesActivity(View view) {
+    public void startMessagesActivity(View view) {
 
     }
 
     /**
-     * <h3>StartAccountActivity(View view)</h3>
+     * <h3>startAccountActivity(View view)</h3>
      * Starts a new instance of the AccountActivity.
      * @param view (Type: View, the view object which triggered the method)
      */
-    public void StartAccountActivity(View view) {
+    public void startAccountActivity(View view) {
 
     }
 
     /**
-     * <h3>Logout(View view)</h3>
+     * <h3>logout(View view)</h3>
      * Logs the user out and returns them to the login screen.
      * @param view (Type: View, the view object which triggered the method)
      */
-    public void Logout(View view) {
+    public void logout(View view) {
 
     }
 }
