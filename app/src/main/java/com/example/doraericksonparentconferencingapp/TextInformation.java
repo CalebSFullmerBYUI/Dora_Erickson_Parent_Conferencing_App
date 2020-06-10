@@ -18,43 +18,57 @@ public class TextInformation {
 
 
     //Constructors
+
     /**
      * <h3>TestInformation()</h3>
      * Default Constructor
      */
     public TextInformation() {
-        sender = "";
-        subject = "";
-        message = "";
-        sentDate = null;
+        setNewTextInfoObj("", "", "", new Date());
     }
 
     /**
      * <h3>TextInformation(String sender, ...)</h3>
      * Overload Constructor
-     * @param sender (Type: String, the name of the sender)
-     * @param message (Type: String, the message to be sent)
+     *
+     * @param sender   (Type: String, the name of the sender)
+     * @param message  (Type: String, the message to be sent)
      * @param sentDate (Type: Date, The date the message was sent)
      */
     public TextInformation(String sender, String message, Date sentDate) {
-        this.sender = sender;
-        this.message = message;
-        this.sentDate = sentDate;
-        subject = "";
+        setNewTextInfoObj(sender, "", message, sentDate);
     }
 
     /**
      * <h3>TextInformation(TextInformation objToCopy)</h3>
      * Copy Constructor
+     *
      * @param objToCopy (Type: TextInformation, The object to copy)
      */
     public TextInformation(TextInformation objToCopy) {
-        sender = objToCopy.getSender();
-        subject = objToCopy.getSubject();
-        message = objToCopy.getMessage();
-        sentDate = objToCopy.getDate();
+        if (objToCopy != null) {
+            setNewTextInfoObj(objToCopy.getSender(), objToCopy.getSubject(),
+                    objToCopy.getMessage(), objToCopy.getDate());
+        } else {
+            setNewTextInfoObj("", "", "", new Date());
+        }
     }
 
+    /**
+     * <h3>setNewTextInfoObj(String sender, ...)</h3>
+     * Used in constructors to set TextInformation variables.
+     *
+     * @param sender   (Type: String, the sender of the message)
+     * @param subject  (Type: String, the subject of the text)
+     * @param message  (Type: String, the message of the text)
+     * @param sentDate (Type: Date, the date the text was sent)
+     */
+    private void setNewTextInfoObj(String sender, String subject, String message, Date sentDate) {
+        setSender(sender);
+        setSubject(subject);
+        setMessage(message);
+        setDate(sentDate);
+    }
 
 
     //Getters
@@ -62,27 +76,39 @@ public class TextInformation {
     /**
      * <h3>getSender()</h3>
      * Returns the name of the sender.
+     *
      * @return sender (Type: String, the name of the sender)
      */
     public String getSender() {
+        if (sender == null) {
+            setSender("");
+        }
         return sender;
     }
 
     /**
      * <h3>getSubject()</h3>
      * Returns the subject of the information item.
+     *
      * @return subject (Type: String, the subject)
      */
     public String getSubject() {
+        if (subject == null) {
+            setSubject("");
+        }
         return subject;
     }
 
     /**
      * <h3>getMessage()</h3>
      * Returns the message content of the item.
+     *
      * @return message (Type: String, the message of the item)
      */
     public String getMessage() {
+        if (message == null) {
+            setMessage("");
+        }
         return message;
     }
 
@@ -92,20 +118,28 @@ public class TextInformation {
      * @return sentDate (Type: Date, the date the message was sent)
      */
     public Date getDate() {
+        if (sentDate == null) {
+            //This should never be the case. If it is, the obvious 0 milliseconds since
+            //  January 1, 1970 should hopefully be a hint that something is wrong.
+            setDate(new Date(0));
+        }
         return sentDate;
     }
 
 
 
     //Setters
-
     /**
      * <h3>setSender(String sender)</h3>
      * Sets the sender to the given sender value.
      * @param newSender (Type: String, the new sender)
      */
     public void setSender(String newSender) {
-
+        if (newSender != null) {
+            sender = newSender;
+        } else {
+            sender = "";
+        }
     }
 
     /**
@@ -114,7 +148,11 @@ public class TextInformation {
      * @param newSubject (Type: String, the new subject)
      */
     public void setSubject(String newSubject) {
-
+        if (newSubject != null) {
+            subject = newSubject;
+        } else {
+            subject = "";
+        }
     }
 
     /**
@@ -123,7 +161,11 @@ public class TextInformation {
      * @param newMessage (Type: String, the new message)
      */
     public void setMessage(String newMessage) {
-
+        if (newMessage != null) {
+            message = newMessage;
+        } else {
+            message = "";
+        }
     }
 
     /**
@@ -132,6 +174,10 @@ public class TextInformation {
      * @param newDate (Type: Date, the date the message was sent)
      */
     public void setDate(Date newDate) {
-
+        if (newDate != null) {
+            sentDate = newDate;
+        } else {
+            sentDate = new Date(0);
+        }
     }
 }
