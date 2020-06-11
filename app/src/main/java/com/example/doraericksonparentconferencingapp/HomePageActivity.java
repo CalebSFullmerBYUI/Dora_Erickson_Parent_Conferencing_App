@@ -2,8 +2,16 @@ package com.example.doraericksonparentconferencingapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
+
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <h3></h3>HomePageActivity Activity</h3>
@@ -28,6 +36,7 @@ public class HomePageActivity extends AppCompatActivity {
             @Override
             public void run() {
                 //Get user from server.
+                //set announcements equal to the user's main announcements list.
             }
         });
     }
@@ -40,7 +49,25 @@ public class HomePageActivity extends AppCompatActivity {
      * Sends a request to the server to get the user's announcements.
      */
     public void refreshAnnouncements() {
+        Thread updateAnnouncements = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Gson convertJson = new Gson();
+                String responseJson = "";
+                //User updatedAnnouncements = null;
+                //Get user data from server.
+                //updatedAnnouncements = convertJson.fromJson(responseJson, User.class);
 
+                //Run displayAnnouncements() on UI thread.
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //currentUser.setAnnouncements(updatedAnnouncements.getAnnouncements);
+                        displayAnnouncements();
+                    }
+                });
+            }
+        });
     }
 
     /**
@@ -48,7 +75,8 @@ public class HomePageActivity extends AppCompatActivity {
      * Displays the user's announcements on the screen.
      */
     public void displayAnnouncements() {
-
+        //List<Integer> test = new ArrayList<>();
+        //View newAnnouncement = new AnnouncementItem(getApplicationContext(), false);
     }
 
 
@@ -62,7 +90,8 @@ public class HomePageActivity extends AppCompatActivity {
      * @param view (Type: View, the view object which triggered the method)
      */
     public void startHelpActivity(View view) {
-
+        Intent newHelpIntent = new Intent(this, HelpPageActivity.class);
+        startActivity(newHelpIntent);
     }
 
     /**
@@ -71,7 +100,8 @@ public class HomePageActivity extends AppCompatActivity {
      * @param view (Type: View, the view object which triggered the method)
      */
     public void startLinksActivity(View view) {
-
+        Intent newLinksIntent = new Intent(this, LinksActivity.class);
+        startActivity(newLinksIntent);
     }
 
     /**
@@ -81,7 +111,11 @@ public class HomePageActivity extends AppCompatActivity {
      * @param view (Type: View, the view object which triggered the method)
      */
     public void startClassroomsActivity(View view) {
-
+        /*if (currentUser.getIsAdmin) {
+            Intent newClassroom = new Intent(this, ClassroomsActivity.class);
+            newClassroom.putExtra("isAdmin", currentUser.getIsAdmin());
+            startActivity(newClassroom)
+        }*/
     }
 
     /**
@@ -90,7 +124,8 @@ public class HomePageActivity extends AppCompatActivity {
      * @param view (Type: View, the view object which triggered the method)
      */
     public void startDirectoryActivity(View view) {
-
+        Intent newDirectory = new Intent(this, DirectoryActivity.class);
+        startActivity(newDirectory);
     }
 
     /**
@@ -99,7 +134,8 @@ public class HomePageActivity extends AppCompatActivity {
      * @param view (Type: View, the view object which triggered the method)
      */
     public void startScheduleActivity(View view) {
-
+        Intent newSchedule = new Intent(this, ScheduleActivity.class);
+        startActivity(newSchedule);
     }
 
     /**
@@ -108,7 +144,8 @@ public class HomePageActivity extends AppCompatActivity {
      * @param view (Type: View, the view object which triggered the method)
      */
     public void startMessagesActivity(View view) {
-
+        //Intent newMessagesActivity = new Intent(this, MessagingActivity.class);
+        //startActivity(newMessagesActivity);
     }
 
     /**
@@ -117,7 +154,8 @@ public class HomePageActivity extends AppCompatActivity {
      * @param view (Type: View, the view object which triggered the method)
      */
     public void startAccountActivity(View view) {
-
+        //Intent newViewProfile = new Intent(this, ViewProfile.class);
+        //startActivity(newViewProfile);
     }
 
     /**
@@ -126,6 +164,6 @@ public class HomePageActivity extends AppCompatActivity {
      * @param view (Type: View, the view object which triggered the method)
      */
     public void logout(View view) {
-
+        
     }
 }

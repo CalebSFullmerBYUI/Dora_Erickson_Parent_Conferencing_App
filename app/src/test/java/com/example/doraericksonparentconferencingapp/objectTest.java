@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import org.junit.Test;
 import org.w3c.dom.Text;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.lang.reflect.Field;
@@ -195,10 +196,5 @@ public class objectTest {
             //Test has failed.
             assert(false);
         }
-    }
-
-    @Test
-    public void specialTest() {
-        Gson test = new Gson();
     }
 }
