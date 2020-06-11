@@ -23,6 +23,13 @@ public class HomePageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+
+        Thread startUp = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //Get user from server.
+            }
+        });
     }
 
 

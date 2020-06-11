@@ -1,5 +1,7 @@
 package com.example.doraericksonparentconferencingapp;
 
+import com.google.gson.Gson;
+
 import org.junit.Test;
 import org.w3c.dom.Text;
 
@@ -193,5 +195,10 @@ public class objectTest {
             //Test has failed.
             assert(false);
         }
+    }
+
+    @Test
+    public void specialTest() {
+        Gson test = new Gson();
     }
 }
