@@ -2,6 +2,7 @@ package com.example.doraericksonparentconferencingapp;
 
 import android.os.Message;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,14 +11,14 @@ import java.util.List;
  * <h3>MessageItem</h3>
  * Holds data for messages between users. An extension of the TextInformation class.
  * @author Caleb Fullmer
- * @since June 8, 2020
- * @version 0.1
+ * @since June 10, 2020
+ * @version 1.0
  */
 public class MessageItem extends TextInformation {
     //Variables
     private String recipient;
     private List<MessageItem> replies;
-    private boolean isRead;
+    private boolean isRead = false;
 
 
     //Constructors
@@ -27,9 +28,7 @@ public class MessageItem extends TextInformation {
      */
     public MessageItem() {
         super();
-        recipient = "";
-        replies = new ArrayList<MessageItem>();
-        isRead = false;
+        setNewMessItemObj("", new ArrayList<MessageItem>(), false);
     }
 
     /**
@@ -42,9 +41,7 @@ public class MessageItem extends TextInformation {
      */
     public MessageItem(String sender, String message, Date sentDate, String recipient) {
         super(sender, message, sentDate);
-        this.recipient = recipient;
-        replies = new ArrayList<MessageItem>();
-        isRead = false;
+        setNewMessItemObj(recipient, new ArrayList<MessageItem>(), false);
     }
 
     /**
@@ -54,22 +51,45 @@ public class MessageItem extends TextInformation {
      */
     public MessageItem(MessageItem objToCopy) {
         super(objToCopy);
-        recipient = objToCopy.recipient;
-        replies = objToCopy.replies;
-        isRead = objToCopy.isRead;
+
+        if (objToCopy != null) {
+            setNewMessItemObj(objToCopy.recipient, objToCopy.replies, objToCopy.isRead);
+        } else {
+            setNewMessItemObj("", new ArrayList<MessageItem>(), false);
+        }
+    }
+
+    /**
+     * <h3>setNewMessItemObj(String recipient, ...)</h3>
+     * Used by constructors to safely set variables.
+     * @param recipient (Type: String, the recipient of the message)
+     * @param replies (Type: List<MessageItem>, list with replies to the message)
+     * @param isRead (Type: boolean, indicates if the message has been read)
+     */
+    private void setNewMessItemObj(String recipient, List<MessageItem> replies, boolean isRead) {
+        setRecipient(recipient);
+        setIsRead(isRead);
+
+        if (replies != null) {
+            this.replies = replies;
+        } else {
+            this.replies = new ArrayList<MessageItem>();
+        }
     }
 
 
 
 
     //Getters
-
     /**
      * <h3>getRecipient()</h3>
      * Returns the recipient of the message
      * @return recipient (Type: String, the name of the recipient)
      */
     public String getRecipient() {
+        if (recipient == null) {
+            setRecipient("");
+        }
         return recipient;
     }
 
@@ -79,6 +99,9 @@ public class MessageItem extends TextInformation {
      * @return replies (Type: List, the replies to the message)
      */
     public List<MessageItem> getReplies() {
+        if (replies == null) {
+            replies = new ArrayList<MessageItem>();
+        }
         return replies;
     }
 
@@ -102,7 +125,11 @@ public class MessageItem extends TextInformation {
      * @param recipient (Type: String, the new recipient of the message)
      */
     public void setRecipient(String recipient) {
-        this.recipient = recipient;
+        if (recipient != null) {
+            this.recipient = recipient;
+        } else {
+            this.recipient = "";
+        }
     }
 
     /**
@@ -111,7 +138,12 @@ public class MessageItem extends TextInformation {
      * @param newReply (Type: MessageItem, the new reply to add)
      */
     public void addReply(MessageItem newReply) {
-
+        if (newReply != null) {
+            if (replies == null) {
+                replies = new ArrayList<MessageItem>();
+            }
+            replies.add(newReply);
+        }
     }
 
     /**

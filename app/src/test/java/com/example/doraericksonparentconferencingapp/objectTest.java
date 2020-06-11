@@ -135,26 +135,26 @@ public class objectTest {
             MessageItem testTextInfo = new MessageItem();
             assert (testRecipient.get(testTextInfo).equals(""));
             assert (testReplies.get(testTextInfo).equals(new ArrayList<MessageItem>()));
-            assert (testIsRead.get(testTextInfo) == false);
+            assert (testIsRead.get(testTextInfo).equals(new Boolean(false)));
 
 
             //Test overload constructor.
             testTextInfo = new MessageItem("TestSender", "Hi there.", new Date(8000), "Hi");
             assert (testRecipient.get(testTextInfo).equals("Hi"));
             assert (testReplies.get(testTextInfo).equals(new ArrayList<MessageItem>()));
-            assert (testIsRead.get(testTextInfo) == false);
+            assert (testIsRead.get(testTextInfo).equals(false));
 
             testTextInfo = new MessageItem(null, null, null, null);
             assert (testRecipient.get(testTextInfo).equals(""));
             assert (testReplies.get(testTextInfo).equals(new ArrayList<MessageItem>()));
-            assert (testIsRead.get(testTextInfo) == false);
+            assert (testIsRead.get(testTextInfo).equals(false));
 
 
             //Test copy constructor
             testTextInfo = new MessageItem(new MessageItem("TestSender", "Hi there.", new Date(8000), "Bye"));
             assert (testRecipient.get(testTextInfo).equals("Bye"));
             assert (testReplies.get(testTextInfo).equals(new ArrayList<MessageItem>()));
-            assert (testIsRead.get(testTextInfo) == false);
+            assert (testIsRead.get(testTextInfo).equals(false));
 
 
 
@@ -176,11 +176,11 @@ public class objectTest {
             //Test setters
             testTextInfo.setRecipient("Dana");
             assert(testRecipient.get(testTextInfo).equals("Dana"));
-            testTextInfo.setSender(null);
+            testTextInfo.setRecipient(null);
             assert(testRecipient.get(testTextInfo).equals(""));
 
             testTextInfo.setIsRead(false);
-            assert(testRecipient.get(testTextInfo).equals(false));
+            assert(testIsRead.get(testTextInfo).equals(false));
 
             MessageItem testMessageItem = new MessageItem();
             testTextInfo.addReply(testMessageItem);

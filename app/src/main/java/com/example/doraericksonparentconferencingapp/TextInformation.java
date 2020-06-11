@@ -6,8 +6,8 @@ import java.util.Date;
  * <h3>TextInformation</h3>
  * Stores data for text information such as messages and announcements.
  * @author Caleb Fullmer
- * @since June 8, 2020
- * @version 0.1
+ * @since June 10, 2020
+ * @version 1.0
  */
 public class TextInformation {
     //Variables
