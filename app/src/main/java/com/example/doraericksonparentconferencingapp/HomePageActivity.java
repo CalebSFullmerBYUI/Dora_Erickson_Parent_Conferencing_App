@@ -6,7 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -27,21 +30,42 @@ import java.util.List;
  */
 public class HomePageActivity extends AppCompatActivity {
     //Variables
-    //Uncomment these once User and ScheduleItem exist.
-    //private User currentUser = null;
-    //private List<ScheduleItem> announcements = new ArrayList<ScheduleItem>();
-    public static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MMM d, yyyy 'at' hh:mm a");
+    private User currentUser = null;
+    private List<ScheduleItem> announcements = new ArrayList<ScheduleItem>();
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MMM d, yyyy 'at' hh:mm a");
+    public ArrayAdapter<AnnouncementView> announceAdapter = new ArrayAdapter<AnnouncementView>(this,
+            android.R.layout.simple_list_item_1, new ArrayList<AnnouncementView>());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
 
-        Thread startUp = new Thread(new Runnable() {
+        //Set up adapter for announcements listview.
+        ((ListView)findViewById(R.id.lstView_Announcements)).setAdapter(announceAdapter);
+
+        //Get user info
+        Thread startUp = new Thread(new CustomRun(this) {
             @Override
             public void run() {
-                //Get user from server.
-                //set announcements equal to the user's main announcements list.
+                //Gets the currentUser as a Json object.
+                //Add file path and variable keys.
+                final String userJson = new ServerRequest().request("", "");
+
+                currentActivity.get().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if ((userJson != null) && (!userJson.equals(""))) {
+                            //Set user and set announcements.
+                            currentUser = new Gson().fromJson(userJson, User.class);
+                            refreshAnnouncements();
+                        } else {
+                            Toast errorToast = Toast.makeText(currentActivity.get().getApplicationContext(),
+                                    "Could not log-in. Please Restart App", Toast.LENGTH_LONG);
+                            errorToast.show();
+                        }
+                    }
+                });
             }
         });
     }
@@ -54,21 +78,31 @@ public class HomePageActivity extends AppCompatActivity {
      * Sends a request to the server to get the user's announcements.
      */
     public void refreshAnnouncements() {
-        Thread updateAnnouncements = new Thread(new Runnable() {
+        Thread updateAnnouncements = new Thread(new CustomRun(this) {
             @Override
             public void run() {
                 Gson convertJson = new Gson();
-                String responseJson = "";
-                //User updatedAnnouncements = null;
-                //Get user data from server.
-                //updatedAnnouncements = convertJson.fromJson(responseJson, User.class);
+                //Insert file path and variable keys.
+                String responseJson = new ServerRequest().request("", "");
+                final HomePageActivity updatedAnnouncements;
+                if ((responseJson != null) && (!responseJson.equals(""))) {
+                     updatedAnnouncements = convertJson.fromJson(responseJson,
+                            HomePageActivity.class);
+                } else {
+                    updatedAnnouncements = null;
+                }
 
                 //Run displayAnnouncements() on UI thread.
-                runOnUiThread(new Runnable() {
+                currentActivity.get().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        //currentUser.setAnnouncements(updatedAnnouncements.getAnnouncements);
-                        displayAnnouncements();
+                        if ((updatedAnnouncements != null) && (updatedAnnouncements.announcements != null)) {
+                            announcements = updatedAnnouncements.announcements;
+                            displayAnnouncements();
+                        } else {
+                            Toast error = Toast.makeText(currentActivity.get().getApplicationContext(),
+                                    "Error getting announcements.", Toast.LENGTH_LONG);
+                        }
                     }
                 });
             }
@@ -80,8 +114,27 @@ public class HomePageActivity extends AppCompatActivity {
      * Displays the user's announcements on the screen.
      */
     public void displayAnnouncements() {
-        //List<Integer> test = new ArrayList<>();
-        //View newAnnouncement = new AnnouncementView(getApplicationContext(), false);
+        if (announcements == null) {
+            announcements = new ArrayList<ScheduleItem>();
+        }
+
+        if (announceAdapter == null) {
+            announceAdapter = new ArrayAdapter<AnnouncementView>(this,
+                    android.R.layout.simple_list_item_1, new ArrayList<AnnouncementView>());
+        }
+
+        announceAdapter.clear();
+        
+        for (SchedlueItem item: announcements) {
+            if (item != null) {
+                AnnouncementView newAnnouncement = new AnnouncementView(getApplicationContext(), false);
+                newAnnouncement.setSender(item.getSender());
+                newAnnouncement.setSubject(item.getSubject());
+                newAnnouncement.setSentDate(DATE_FORMAT.format(item.getDate()));
+                newAnnouncement.setMessage(item.getMessage());
+                announceAdapter.add(newAnnouncement);
+            }
+        }
     }
 
 
@@ -116,11 +169,10 @@ public class HomePageActivity extends AppCompatActivity {
      * @param view (Type: View, the view object which triggered the method)
      */
     public void startClassroomsActivity(View view) {
-        /*if (currentUser.getIsAdmin) {
-            Intent newClassroom = new Intent(this, ClassroomsActivity.class);
-            newClassroom.putExtra("isAdmin", currentUser.getIsAdmin());
-            startActivity(newClassroom)
-        }*/
+        //Intent newClassroom = new Intent(this, ClassroomsActivity.class);
+        //newClassroom.putExtra("isAdmin", currentUser.getIsAdmin());
+        //newClassroom.putExtra("classId", currentUser.getClassId());
+        //startActivity(newClassroom);
     }
 
     /**
