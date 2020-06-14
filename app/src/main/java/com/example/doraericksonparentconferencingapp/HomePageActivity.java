@@ -26,7 +26,7 @@ import java.util.List;
  *          Official JavaDocs on SimpleDateFormat and date formatting.
  * @author Caleb Fullmer
  * @since June 9, 2020
- * @version 0.1
+ * @version 1.0
  */
 public class HomePageActivity extends AppCompatActivity {
     //Variables
@@ -124,7 +124,7 @@ public class HomePageActivity extends AppCompatActivity {
         }
 
         announceAdapter.clear();
-        
+
         for (SchedlueItem item: announcements) {
             if (item != null) {
                 AnnouncementView newAnnouncement = new AnnouncementView(getApplicationContext(), false);
