@@ -21,9 +21,16 @@ import java.util.TreeMap;
  * <h3>DirectoryActivity Activity</h3>
  * Allows the user to access teacher and admin info. From here
  * the user can access individual teacher and admin classrooms.
+ * References:
+ *      https://docs.oracle.com/javase/8/docs/api/java/util/TreeMap.html
+ *          Official JavaDocs on TreeMaps.
+ *      https://www.geeksforgeeks.org/how-to-iterate-over-a-treemap-in-java/
+ *          This page discusses how to iterate over a treemap using the entrySet() method.
+ *      https://www.geeksforgeeks.org/collections-sort-java-examples/
+ *          This page discusses how to use the Collections.sort.
  * @author Caleb Fullmer
  * @since June 9 2020
- * @version 0.1
+ * @version 1.0
  */
 public class DirectoryActivity extends AppCompatActivity {
     //Variables
@@ -150,7 +157,47 @@ public class DirectoryActivity extends AppCompatActivity {
             @Override
             public int compare(TeacherItem teach1, TeacherItem teach2) {
                 //Change this to be last name if we decide to have seperate last and first names.
-                return teach1.getName() > teach2.getName();
+                if ((teach1 == null) || (teach1.getName().equals(""))) {
+                    return 1;
+                }
+
+                if ((teach2 == null) || (teach2.getName().equals(""))) {
+                    return -1;
+                }
+
+                char teach1Char = ' ';
+                char teach2Char = ' ';
+
+                for (int index = 0; index <= 9; ++index) {
+                    if (teach1.getName().length() >= (index + 1)) {
+                        if (teach2.getName().length() >= (index + 1)) {
+                            teach1Char = teach1.getName().charAt(index);
+                            teach2Char = teach2.getName().charAt(index);
+
+                            if (Character.isLetter(teach1Char)) {
+                                Character.toLowerCase(teach1Char);
+                            }
+
+                            if (Character.isLetter(teach2Char)) {
+                                Character.toLowerCase(teach2Char);
+                            }
+
+                            if (teach1Char > teach2Char) {
+                                return 1;
+                            } else if (teach2Char > teach1Char) {
+                                return -1;
+                            }
+                        } else {
+                            return 1;
+                        }
+                    } else if (teach1.getName().length() == teach2.getName().length()){
+                        return 0;
+                    } else {
+                        return -1;
+                    }
+                }
+
+                return 0;
             }
         });
     }
