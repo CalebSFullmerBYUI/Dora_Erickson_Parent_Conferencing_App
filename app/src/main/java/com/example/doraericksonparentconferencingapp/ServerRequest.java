@@ -120,13 +120,13 @@ public class ServerRequest {
 
             return jsonResponse;
         } catch (MalformedURLException e) {
-            Log.e("Error in ServerRequest.request()", e.getMessage());
+            Log.e("ServerRequest.request()", e.getMessage());
             return null;
         } catch (IOException e) {
-            Log.e("Error in ServerRequest.request()", e.getMessage());
+            Log.e("ServerRequest.request()", e.getMessage());
             return null;
         } catch (Exception e) {
-            Log.e("Error in ServerRequest.request()", e.getMessage());
+            Log.e("ServerRequest.request()", e.getMessage());
             return null;
         }
     }
