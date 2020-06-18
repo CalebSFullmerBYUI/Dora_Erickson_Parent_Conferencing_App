@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -37,15 +39,11 @@ public class DirectoryActivity extends AppCompatActivity {
     private ArrayList<TeacherItem> teachers = new ArrayListist<TeacherItem>();
     private TreeMap<String, ArrayList<TeacherItem>> gradeSortTeachers =
             new TreeMap<String, ArrayList<TeacherItem>>();
-    public ArrayAdapter<AnnouncementView> directoryAdapter = new ArrayAdapter<AnnouncementView>(this,
-            android.R.layout.simple_list_item_1, new ArrayList<AnnouncementView>());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_directory);
-
-        ((ListView)findViewById(R.id.lstView_Announcements)).setAdapter(directoryAdapter);
 
         getDirectoryInfo();
     }
@@ -105,13 +103,28 @@ public class DirectoryActivity extends AppCompatActivity {
             gradeSortTeachers = new TreeMap<String, ArrayList<TeacherItem>>();
         }
 
-        if (directoryAdapter == null) {
-            directoryAdapter = new ArrayAdapter<AnnouncementView>(this,
-                    android.R.layout.simple_list_item_1, new ArrayList<AnnouncementView>());
-        }
 
+        //Iterate through bst and loop through each array.
         for (Map.Entry<String, ArrayList<TeacherItem>> it: gradeSortTeachers.entrySet()) {
             //Add data to be displayed as nessisary.
+            if ((it.getValue() != null) && !it.getValue().isEmpty()) {
+                GradeSectionView newGradeView = new GradeSectionView(getApplicationContext());
+                newGradeView.setLabel(it.getValue().get(0).getClassName());
+
+                for (TeacherItem item: it.getValue()) {
+                    Button newButton = new Button(getApplicationContext());
+                    newButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            goToClassroom(v);
+                        }
+                    });
+
+                    newGradeView.addTeacherBtn(item, newButton);
+                }
+
+                ((LinearLayout)findViewById(R.id.linLay_Directory)).addView(newGradeView);
+            }
         }
     }
 
@@ -135,7 +148,7 @@ public class DirectoryActivity extends AppCompatActivity {
                 } else {
                     ArrayList<TeacherItem> newList = new ArrayList<>();
                     newList.add(teacher);
-                    gradeSortteachers.put(teacher.getClassName(), newList);
+                    gradeSortTeachers.put(teacher.getClassName(), newList);
                 }
             }
         }
