@@ -22,8 +22,8 @@ import java.util.ArrayList;
  *      https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
  *          Official JavaDocs on SimpleDateFormat and date formatting.
  * @author Caleb Fullmer
- * @since June 9, 2020
- * @version 1.0
+ * @since June 20, 2020
+ * @version 1.1
  */
 public class HomePageActivity extends AppCompatActivity {
     //Variables
