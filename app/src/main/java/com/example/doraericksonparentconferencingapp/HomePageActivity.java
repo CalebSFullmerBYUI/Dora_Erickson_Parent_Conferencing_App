@@ -218,6 +218,6 @@ public class HomePageActivity extends AppCompatActivity {
      * @param view (Type: View, the view object which triggered the method)
      */
     public void logout(View view) {
-
+        finish();
     }
 }
