@@ -11,10 +11,10 @@ import java.util.Date;
  */
 public class TextInformation {
     //Variables
-    private String sender;
-    private String subject;
-    private String message;
-    private Date sentDate;
+    private String sender = null;
+    private String subject = null;
+    private String message = null;
+    private long sentDate = 0;
 
 
     //Constructors
@@ -118,12 +118,12 @@ public class TextInformation {
      * @return sentDate (Type: Date, the date the message was sent)
      */
     public Date getDate() {
-        if (sentDate == null) {
+        /*if (sentDate == null) {
             //This should never be the case. If it is, the obvious 0 milliseconds since
             //  January 1, 1970 should hopefully be a hint that something is wrong.
             setDate(new Date(0));
-        }
-        return sentDate;
+        }*/
+        return new Date(sentDate * 1000);
     }
 
 
@@ -175,9 +175,9 @@ public class TextInformation {
      */
     public void setDate(Date newDate) {
         if (newDate != null) {
-            sentDate = newDate;
+            sentDate = newDate.getTime() / 1000;
         } else {
-            sentDate = new Date(0);
+            sentDate = 0;
         }
     }
 }

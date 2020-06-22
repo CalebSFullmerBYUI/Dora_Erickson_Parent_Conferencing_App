@@ -54,7 +54,14 @@ public class HomePageActivity extends AppCompatActivity {
                     public void run() {
                         if ((userJson != null) && (!userJson.equals(""))) {
                             //Set user and set announcements.
+
+                            //mockResponse used in place of userJson for prototype.
+                            String mockResponse = "{'announcements': [{'sender': 'admin1', 'subject':" +
+                                    "'New School Policy', 'message': 'We will be implementing a new" +
+                                    "school policy starting October 12, 2020. It requires students to" +
+                                    "be on time to class.', 'sentDate': '', 'dueDate': null, 'isHomework': false}, {}, {}, {}]}";
                             currentUser = new Gson().fromJson(userJson, User.class);
+                            new Gson().
                             refreshAnnouncements();
                         } else {
                             Toast errorToast = Toast.makeText(currentActivity.get().getApplicationContext(),
