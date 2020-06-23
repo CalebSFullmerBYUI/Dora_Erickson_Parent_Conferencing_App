@@ -22,7 +22,7 @@ import java.util.ArrayList;
  *      https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
  *          Official JavaDocs on SimpleDateFormat and date formatting.
  * @author Caleb Fullmer
- * @since June 20, 2020
+ * @since June 22, 2020
  * @version 1.1
  */
 public class HomePageActivity extends AppCompatActivity {
@@ -95,7 +95,8 @@ public class HomePageActivity extends AppCompatActivity {
                 final HomePageActivity updatedAnnouncements;
                 if ((responseJson != null) && (!responseJson.equals(""))) {
                     //mockResponse used in place of userJson for prototype.
-                    String mockResponse = "{'announcements': [{'sender': 'admin1', 'subject': " +
+                    String mockResponse = "{'announcements': [" +
+                            "{'sender': 'admin1', 'subject': " +
                             "'New School Policy', 'message': 'We will be implementing a new " +
                             "school policy starting October 12, 2020. It requires students to " +
                             "be on time to class.', 'sentDate': '1598652343', 'dueDate': 0, " +
@@ -111,7 +112,8 @@ public class HomePageActivity extends AppCompatActivity {
                             "{'sender': 'admin1', 'subject': 'Gradebook Changes', 'message': " +
                             "'Starting September 4th, there will be changes to the Gradebook app. " +
                             "Check PowerSchool for more details.', 'sentDate': '1598652343', " +
-                            "'dueDate': null, 'isHomework': false}]}";
+                            "'dueDate': null, 'isHomework': false}" +
+                            "]}";
                      updatedAnnouncements = convertJson.fromJson(mockResponse/*responseJson*/,
                             HomePageActivity.class);
                 } else {

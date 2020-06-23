@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -31,8 +32,8 @@ import java.util.TreeMap;
  *      https://www.geeksforgeeks.org/collections-sort-java-examples/
  *          This page discusses how to use the Collections.sort.
  * @author Caleb Fullmer
- * @since June 9 2020
- * @version 1.0
+ * @since June 23 2020
+ * @version 1.1
  */
 public class DirectoryActivity extends AppCompatActivity {
     //Variables
@@ -61,7 +62,42 @@ public class DirectoryActivity extends AppCompatActivity {
                 final DirectoryActivity newData;
 
                 if ((dirJson != null) && (dirJson != "")) {
-                    DirectoryActivity newDirectory = new Gson().fromJson(dirJson, DirectoryActivity.class);
+                    //driJson replaced with mockResponse for testing.
+                    //Template for mock "{'name': '', 'className': '', 'classId': 0, 'email': '@fakeEmail.com', 'phoneNum': 20}" +
+                    String mockResponse = "{'teachers': [" +
+                            "{'name': 'Katey Adamson', 'className': '4th Grade', 'classId': 13, 'email': 'Katey@fakeEmail.com', 'phoneNum': 2075555555}" +
+                            "{'name': 'John Doe', 'className': '1st Grade', 'classId': 0, 'email': 'JohnDoe@fakeEmail.com', 'phoneNum': 2082222222}" +
+                            "{'name': 'Dan Peters', 'className': '2nd Grade', 'classId': 2, 'email': 'Dan@fakeEmail.com', 'phoneNum': 2084444444}" +
+                            "{'name': 'Katey Brown', 'className': '5st Grade', 'classId': 10, 'email': 'Katey@fakeEmail.com', 'phoneNum': 2072222222}" +
+                            "{'name': 'Lucy Smith', 'className': '1st Grade', 'classId': 3, 'email': 'Lucy@fakeEmail.com', 'phoneNum': 2085555555}" +
+                            "{'name': 'Milly Sanders', 'className': 'Kindergarten', 'classId': 4, 'email': 'Milly@fakeEmail.com', 'phoneNum': 2086666666}" +
+                            "{'name': 'Peter Pan', 'className': '1st Grade', 'classId': 6, 'email': 'Peter@fakeEmail.com', 'phoneNum': 2088888888}" +
+                            "{'name': 'Sam Smith', 'className': '4th Grade', 'classId': 8, 'email': 'Sam@fakeEmail.com', 'phoneNum': 2080000000}" +
+                            "{'name': 'Jane Doe', 'className': 'Kindergarten', 'classId': 5, 'email': 'Jane@fakeEmail.com', 'phoneNum': 2087777777}" +
+                            "{'name': 'Shawn Matthews', 'className': '5th Grade', 'classId': 9, 'email': 'Shawn@fakeEmail.com', 'phoneNum': 2081111111}" +
+                            "{'name': 'Doey Jane', 'className': '2nd Grade', 'classId': 1, 'email': 'DoeyJane@fakeEmail.com', 'phoneNum': 2083333333}" +
+                            "{'name': 'Bethany Oswald', 'className': 'Counselor', 'classId': 11, 'email': 'Bethany@fakeEmail.com', 'phoneNum': 2073333333}" +
+                            "{'name': 'Lisa Velvet', 'className': 'Counselor', 'classId': 12, 'email': 'Lisa@fakeEmail.com', 'phoneNum': 2074444444}" +
+                            "{'name': 'Jack Smith', 'className': '3rd Grade', 'classId': 7, 'email': 'Jack@fakeEmail.com', 'phoneNum': 2089999999}" +
+                            "{'name': 'Jena Woodsworth', 'className': 'Office', 'classId': 14, 'email': 'Jena@fakeEmail.com', 'phoneNum': 2076666666}" +
+                            "{'name': 'Daniel Jenkins', 'className': '4th Grade', 'classId': 15, 'email': 'Daniel@fakeEmail.com', 'phoneNum': 2077777777}" +
+                            "{'name': 'John Peterson', 'className': 'Administration', 'classId': 16, 'email': 'John@fakeEmail.com', 'phoneNum': 2078888888}" +
+                            "{'name': 'Heather Oswald', 'className': 'Administration', 'classId': 17, 'email': 'Heather@fakeEmail.com', 'phoneNum': 2079999999}" +
+                            "{'name': 'Andrew Jackson', 'className': 'Administration', 'classId': 19, 'email': 'Jackson@fakeEmail.com', 'phoneNum': 2071111111}" +
+                            //The below is for testing the alphabatizing function.
+                            "{'name': 'Brixton Smith', 'className': '4th Grade', 'classId': 24, 'email': 'Brixton@fakeEmail.com', 'phoneNum': 2066666666}" +
+                            "{'name': 'Bethany Patton', 'className': '4th Grade', 'classId': 20, 'email': 'Patton@fakeEmail.com', 'phoneNum': 2062222222}" +
+                            "{'name': 'Dalton Latonson', 'className': '4th Grade', 'classId': 22, 'email': 'Dalton@fakeEmail.com', 'phoneNum': 2064444444}" +
+                            "{'name': 'Christina Betterson', 'className': '4th Grade', 'classId': 21, 'email': 'Christina@fakeEmail.com', 'phoneNum': 2063333333}" +
+                            "{'name': 'Benjamin Smith', 'className': '4th Grade', 'classId': 23, 'email': 'Benjamin@fakeEmail.com', 'phoneNum': 2065555555}" +
+                            "{'name': 'Tina Oswald', 'className': '4th Grade', 'classId': 25, 'email': 'Tina@fakeEmail.com', 'phoneNum': 2067777777}" +
+                            "{'name': 'Andrew Lessman', 'className': '4th Grade', 'classId': 18, 'email': 'Andrew@fakeEmail.com', 'phoneNum': 2070000000}" +
+                            "{'name': 'Beth Lessman', 'className': '4th Grade', 'classId': 19, 'email': 'Lessman@fakeEmail.com', 'phoneNum': 2071111111}" +
+                            "{'name': 'Vance Smith', 'className': '4th Grade', 'classId': 26, 'email': 'Vance@fakeEmail.com', 'phoneNum': 2068888888}" +
+                            "{'name': 'Barney Lee', 'className': '4th Grade', 'classId': 27, 'email': 'Barney@fakeEmail.com', 'phoneNum': 2069999999}" +
+                            "]}";
+
+                    DirectoryActivity newDirectory = new Gson().fromJson(mockResponse/*dirJson*/, DirectoryActivity.class);
                     alphabetizeTeacherVector(newDirectory.teachers);
                     newDirectory.sortTeachersByGrade();
 
@@ -112,15 +148,21 @@ public class DirectoryActivity extends AppCompatActivity {
                 newGradeView.setLabel(it.getValue().get(0).getClassName());
 
                 for (TeacherItem item: it.getValue()) {
-                    Button newButton = new Button(getApplicationContext());
-                    newButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            goToClassroom(v);
-                        }
-                    });
+                    if (item != null) {
+                        Button newButton = new Button(getApplicationContext());
+                        /* Sets the button's tag to the teacher's class id. Used to specify
+                         * the correct class in the goToClassroom() method.
+                         */
+                        newButton.setTag(item.getClassId());
+                        newButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                goToClassroom(v);
+                            }
+                        });
 
-                    newGradeView.addTeacherBtn(item, newButton);
+                        newGradeView.addTeacherBtn(item, newButton);
+                    }
                 }
 
                 ((LinearLayout)findViewById(R.id.linLay_Directory)).addView(newGradeView);
@@ -222,10 +264,28 @@ public class DirectoryActivity extends AppCompatActivity {
      * @param view (Type: View, the object which triggered the method)
      */
     public void goToClassroom(View view) {
-        //Intent newClassroom = new Intent(this, ClassroomsActivity.class);
-        //newClassroom.putExtra("isAdmin", currentUser.getIsAdmin());
-        //newClassroom.putExtra("classId", currentUser.getClassId());
-        //startActivity(newClassroom);
+        if ((view.getTag() != null) && (view.getTag() instanceof Integer)) {
+            Intent newClassroom = new Intent(this, ClassroomsActivity.class);
+            boolean isAdmin = false;
+            int classId = (int)view.getTag();
+
+            /* Note, somehow needs access to current user. Could either have variable passed to it,
+             * or HomePageActivity user could be static.
+             */
+            if (currentUser.getIsAdmin() && (currentUser.getClassId() == classId)) {
+                isAdmin = true;
+            }
+
+            //Add data to intent.
+            newClassroom.putExtra("isAdmin", isAdmin);
+            newClassroom.putExtra("classId", classId);
+
+            startActivity(newClassroom);
+        } else {
+            Log.e("DirectoryActivity", "Could not get class Id");
+            Toast errorToast = Toast.makeText(getApplicationContext(), "Could not access class.",Toast.LENGTH_LONG);
+            errorToast.show();
+        }
     }
 
 
