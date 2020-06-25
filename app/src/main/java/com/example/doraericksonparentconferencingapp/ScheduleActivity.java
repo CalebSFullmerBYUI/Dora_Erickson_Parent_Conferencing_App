@@ -70,28 +70,32 @@ public class ScheduleActivity extends AppCompatActivity {
             public void run() {
                 //Get data from server.
                 final String scheduleJson = new ServerRequest().request("", "");
-                final ScheduleActivity newSchedule;
+                final ArrayList<ScheduleItem> newSchedule;
+                final TreeMap<String, ArrayList<ScheduleItem>> newSortedSchedule;
 
                 if ((scheduleJson != null) && !scheduleJson.equals("")) {
                     //ScheduleJson replaced with mockResponse.
-                    String mockResponse = "{'scheduledItems': [" +
+                    String mockResponse = "{'announcements': [" +
                             "{'sender': 'admin1', 'subject': 'New School Policy', 'message': " +
                             "'We will be implementing a new school policy starting October 12, 2020. It requires students to be on time to class.', " +
                             "'sentDate': '1598652343', 'dueDate': 0, 'isHomework': false}," +
                             "]}";
 
-                    newSchedule = new Gson().fromJson(mockResponse/*scheduleJson*/, ScheduleActivity.class);
-                    newSchedule.sortScheduleItems();
+                    newSchedule = new Gson().fromJson(mockResponse/*scheduleJson*/, ScheduleItemVector.class).getVector();
+                    newSortedSchedule = sortScheduleItems(newSchedule);
                 } else {
                     newSchedule = null;
+                    newSortedSchedule = null;
                 }
 
                 //Update schedule list.
                 currentActivity.get().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if ((newSchedule != null) && (newSchedule.scheduledItems != null)) {
-                            scheduledItems = newSchedule.scheduledItems;
+                        if ((newSchedule != null) && (!newSchedule.isEmpty()) && (newSortedSchedule != null)
+                                && (!newSortedSchedule.isEmpty())) {
+                            scheduledItems = newSchedule;
+                            sortedSchedule = newSortedSchedule;
                             displayInfo();
                         } else {
                             Toast errorToast = Toast.makeText(currentActivity.get().getApplicationContext(),
@@ -190,18 +194,19 @@ public class ScheduleActivity extends AppCompatActivity {
     /**
      * <h3>sortScheduleItems()</h3>
      * Sorts the schedule items by week into a bst.
+     * @param listToSort (Type: ArrayList<ScheduleItem>, the list to sort)
+     * @return sortedSchedule (Type: TreeMap<String, ArrayList<ScheduleItem>>, the sorted schedule)
      */
-    public void sortScheduleItems() {
-        if (scheduledItems == null) {
-            scheduledItems = new ArrayList<ScheduleItem>();
+    public TreeMap<String, ArrayList<ScheduleItem>> sortScheduleItems(ArrayList<ScheduleItem> listToSort) {
+        if (listToSort == null) {
+            return new TreeMap<String, ArrayList<ScheduleItem>>();
         }
 
-        if (sortedSchedule == null) {
-            sortedSchedule = new TreeMap<String, ArrayList<ScheduleItem>>();
-        }
+
+        TreeMap<String, ArrayList<ScheduleItem>> newSortedSchedule = new TreeMap<String, ArrayList<ScheduleItem>>();
 
         //Sort items in binary tree.
-        for (ScheduleItem item: scheduledItems) {
+        for (ScheduleItem item: listToSort) {
             if (item != null) {
                 Date sortingDate = null;
                 String sortingKey = "";
@@ -215,20 +220,22 @@ public class ScheduleActivity extends AppCompatActivity {
                 //Get correct key.
                 sortingKey = getScheduleKey(sortingDate);
 
-                if (sortedSchedule.containsKey(sortingKey)) {
-                    sortedSchedule.get(sortingKey).add(item);
+                if (newSortedSchedule.containsKey(sortingKey)) {
+                    newSortedSchedule.get(sortingKey).add(item);
                 } else {
                     ArrayList<ScheduleItem> newList = new ArrayList<ScheduleItem>();
                     newList.add(item);
-                    sortedSchedule.put(keyFormat.format(sortingKey), newList);
+                    newSortedSchedule.put(keyFormat.format(sortingKey), newList);
                 }
             }
         }
 
         //Ensure that the entries of the binary tree are orginized correctly by date.
-        for (Map.Entry<String, ArrayList<ScheduleItem>> it: sortedSchedule.entrySet()) {
+        for (Map.Entry<String, ArrayList<ScheduleItem>> it: newSortedSchedule.entrySet()) {
             sortScheduleListByDate(it.getValue());
         }
+
+        return newSortedSchedule;
     }
 
     /**

@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -43,11 +44,22 @@ public class DirectoryActivity extends AppCompatActivity {
     private ArrayList<TeacherItem> teachers = new ArrayListist<TeacherItem>();
     private TreeMap<String, ArrayList<TeacherItem>> gradeSortTeachers =
             new TreeMap<String, ArrayList<TeacherItem>>();
+    private User currentUser = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_directory);
+
+        if (getIntent().getStringExtra(HomePageActivity.USER_KEY) != null) {
+            currentUser = new Gson().fromJson(getIntent().getStringExtra(HomePageActivity.USER_KEY), User.class);
+        } else {
+            Log.e("DirectoryActivity.onCreate()", "Error: No known User passed in.");
+            currentUser = User("John Doe", false);
+
+            Toast errorToast = Toast.makeText(getApplicationContext(), "User not recognized.", Toast.LENGTH_LONG);
+            errorToast.show();
+        }
 
         getDirectoryInfo();
     }
@@ -62,7 +74,8 @@ public class DirectoryActivity extends AppCompatActivity {
             @Override
             public void run() {
                 String dirJson = new ServerRequest().request("", "");
-                final DirectoryActivity newData;
+                final ArrayList<TeacherItem> newData;
+                final TreeMap<String, ArrayList<TeacherItem>> newGradeSortedData;
 
                 if ((dirJson != null) && (dirJson != "")) {
                     //driJson replaced with mockResponse for testing.
@@ -100,21 +113,23 @@ public class DirectoryActivity extends AppCompatActivity {
                             "{'name': 'Barney Lee', 'className': '4th Grade', 'classId': 27, 'email': 'Barney@fakeEmail.com', 'phoneNum': 2069999999}" +
                             "]}";
 
-                    DirectoryActivity newDirectory = new Gson().fromJson(mockResponse/*dirJson*/, DirectoryActivity.class);
-                    alphabetizeTeacherVector(newDirectory.teachers);
-                    newDirectory.sortTeachersByGrade();
+                    TeacherItemVector newDirectory = new Gson().fromJson(mockResponse/*dirJson*/, TeacherItemVector.class);
+                    alphabetizeTeacherVector(newDirectory.getVector());
 
-                    newData = newDirectory;
+                    newData = newDirectory.getVector();
+                    newGradeSortedData = sortTeachersByGrade(newDirectory.getVector());
                 } else {
                     newData = null;
+                    newGradeSortedData = null;
                 }
 
                 currentActivity.get().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (newData != null) {
-                            teachers = newData.teachers;
-                            gradeSortTeachers = newData.gradeSortTeachers;
+                        if ((newData != null) && (!newData.isEmpty()) && (newGradeSortedData != null)
+                                && (!newGradeSortedData.isEmpty())) {
+                            teachers = newData;
+                            gradeSortTeachers = newGradeSortedData;
                             displayDirectory();
                         } else {
                             Toast errorToast = Toast.makeText(currentActivity.get().getApplicationContext(),
@@ -176,33 +191,35 @@ public class DirectoryActivity extends AppCompatActivity {
     /**
      * <h3>sortTeachersByGrade()</h3>
      * Sorts the given list of teachers by grade in a TreeMap.
+     * @param listToSort (Type: ArrayList<TeacherItem>, the list to orginize)
+     * @return treeList (Type: TreeMap<String, ArrayList<TeacherItem>>, the grade orginized teachers.)
      */
-    private void sortTeachersByGrade() {
-        if (teachers == null) {
-            teachers = new ArrayListist<TeacherItem>();
+    private TreeMap<String, ArrayList<TeacherItem>> sortTeachersByGrade(ArrayList<TeacherItem> listToSort) {
+        if (listToSort == null) {
+            return new TreeMap<String, ArrayList<TeacherItem>>();
         }
 
-        if (gradeSortTeachers == null) {
-            new TreeMap<String, ArrayList<TeacherItem>>();
-        }
+        TreeMap<String, ArrayList<TeacherItem>> newSortedTeachers = new TreeMap<String, ArrayList<TeacherItem>>();
 
-        for (TeacherItem teacher: teachers) {
+        for (TeacherItem teacher: listToSort) {
             if (teacher != null) {
-                if (gradeSortTeachers.containsKey(teacher.getClassName())) {
-                    gradeSortTeachers.get(teacher.getClassName()).add(teacher);
+                if (newSortedTeachers.containsKey(teacher.getClassName())) {
+                    newSortedTeachers.get(teacher.getClassName()).add(teacher);
                 } else {
                     ArrayList<TeacherItem> newList = new ArrayList<>();
                     newList.add(teacher);
-                    gradeSortTeachers.put(teacher.getClassName(), newList);
+                    newSortedTeachers.put(teacher.getClassName(), newList);
                 }
             }
         }
 
-        for (Map.Entry<String, ArrayList<TeacherItem>> it: gradeSortTeachers.entrySet()) {
+        for (Map.Entry<String, ArrayList<TeacherItem>> it: newSortedTeachers.entrySet()) {
             if (it.getValue().size() > 1) {
                 alphabetizeTeacherVector(it.getValue());
             }
         }
+
+        return newSortedTeachers;
     }
 
     /**
@@ -280,8 +297,7 @@ public class DirectoryActivity extends AppCompatActivity {
             }
 
             //Add data to intent.
-            newClassroom.putExtra("isAdmin", isAdmin);
-            newClassroom.putExtra("classId", classId);
+            newClassroom.putExtra(HomePageActivity.USER_KEY, new Gson().toJson(currentUser));
 
             startActivity(newClassroom);
         } else {

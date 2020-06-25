@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.UserHandle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.net.UnknownServiceException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -22,14 +24,15 @@ import java.util.ArrayList;
  *      https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
  *          Official JavaDocs on SimpleDateFormat and date formatting.
  * @author Caleb Fullmer
- * @since June 22, 2020
- * @version 1.1
+ * @since June 25, 2020
+ * @version 1.2
  */
 public class HomePageActivity extends AppCompatActivity {
     //Variables
     private User currentUser = null;
     private ArrayList<ScheduleItem> announcements = new ArrayList<ScheduleItem>();
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MMM d, yyyy 'at' hh:mm a");
+    public static final String USER_KEY = "currentUser";
     public ArrayAdapter<AnnouncementView> announceAdapter = new ArrayAdapter<AnnouncementView>(this,
             android.R.layout.simple_list_item_1, new ArrayList<AnnouncementView>());
 
@@ -92,7 +95,7 @@ public class HomePageActivity extends AppCompatActivity {
                 Gson convertJson = new Gson();
                 //Insert file path and variable keys.
                 String responseJson = new ServerRequest().request("", "");
-                final HomePageActivity updatedAnnouncements;
+                final ScheduleItemVector updatedAnnouncements;
                 if ((responseJson != null) && (!responseJson.equals(""))) {
                     //mockResponse used in place of userJson for prototype.
                     String mockResponse = "{'announcements': [" +
@@ -115,7 +118,7 @@ public class HomePageActivity extends AppCompatActivity {
                             "'dueDate': null, 'isHomework': false}" +
                             "]}";
                      updatedAnnouncements = convertJson.fromJson(mockResponse/*responseJson*/,
-                            HomePageActivity.class);
+                            ScheduleItemVector.class);
                 } else {
                     updatedAnnouncements = null;
                 }
@@ -124,8 +127,8 @@ public class HomePageActivity extends AppCompatActivity {
                 currentActivity.get().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if ((updatedAnnouncements != null) && (updatedAnnouncements.announcements != null)) {
-                            announcements = updatedAnnouncements.announcements;
+                        if ((updatedAnnouncements != null) && (!updatedAnnouncements.getVector().isEmpty())) {
+                            announcements = updatedAnnouncements.getVector();
                             displayAnnouncements();
                         } else {
                             Toast error = Toast.makeText(currentActivity.get().getApplicationContext(),
@@ -197,10 +200,9 @@ public class HomePageActivity extends AppCompatActivity {
      * @param view (Type: View, the view object which triggered the method)
      */
     public void startClassroomsActivity(View view) {
-        //Intent newClassroom = new Intent(this, ClassroomsActivity.class);
-        //newClassroom.putExtra("isAdmin", currentUser.getIsAdmin());
-        //newClassroom.putExtra("classId", currentUser.getClassId());
-        //startActivity(newClassroom);
+        Intent newClassroom = new Intent(this, ClassroomsActivity.class);
+        newClassroom.putExtra(USER_KEY, new Gson().toJson(currentUser));
+        startActivity(newClassroom);
     }
 
     /**
@@ -210,6 +212,7 @@ public class HomePageActivity extends AppCompatActivity {
      */
     public void startDirectoryActivity(View view) {
         Intent newDirectory = new Intent(this, DirectoryActivity.class);
+        newDirectory.putExtra(USER_KEY, new Gson().toJson(currentUser));
         startActivity(newDirectory);
     }
 
@@ -229,8 +232,9 @@ public class HomePageActivity extends AppCompatActivity {
      * @param view (Type: View, the view object which triggered the method)
      */
     public void startMessagesActivity(View view) {
-        //Intent newMessagesActivity = new Intent(this, MessagingActivity.class);
-        //startActivity(newMessagesActivity);
+        Intent newMessagesActivity = new Intent(this, MessagingActivity.class);
+        newMessagesActivity.putExtra(USER_KEY, new Gson().toJson(currentUser));
+        startActivity(newMessagesActivity);
     }
 
     /**
@@ -239,8 +243,9 @@ public class HomePageActivity extends AppCompatActivity {
      * @param view (Type: View, the view object which triggered the method)
      */
     public void startAccountActivity(View view) {
-        //Intent newViewProfile = new Intent(this, ViewProfile.class);
-        //startActivity(newViewProfile);
+        Intent newViewProfile = new Intent(this, ViewProfile.class);
+        newViewProfile.putExtra(USER_KEY, new Gson().toJson(currentUser));
+        startActivity(newViewProfile);
     }
 
     /**
