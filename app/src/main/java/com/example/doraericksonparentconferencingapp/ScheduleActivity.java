@@ -73,7 +73,14 @@ public class ScheduleActivity extends AppCompatActivity {
                 final ScheduleActivity newSchedule;
 
                 if ((scheduleJson != null) && !scheduleJson.equals("")) {
-                    newSchedule = new Gson().fromJson(scheduleJson, ScheduleActivity.class);
+                    //ScheduleJson replaced with mockResponse.
+                    String mockResponse = "{'scheduledItems': [" +
+                            "{'sender': 'admin1', 'subject': 'New School Policy', 'message': " +
+                            "'We will be implementing a new school policy starting October 12, 2020. It requires students to be on time to class.', " +
+                            "'sentDate': '1598652343', 'dueDate': 0, 'isHomework': false}," +
+                            "]}";
+
+                    newSchedule = new Gson().fromJson(mockResponse/*scheduleJson*/, ScheduleActivity.class);
                     newSchedule.sortScheduleItems();
                 } else {
                     newSchedule = null;

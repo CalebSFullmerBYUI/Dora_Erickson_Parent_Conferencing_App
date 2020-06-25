@@ -31,6 +31,9 @@ import java.util.TreeMap;
  *          This page discusses how to iterate over a treemap using the entrySet() method.
  *      https://www.geeksforgeeks.org/collections-sort-java-examples/
  *          This page discusses how to use the Collections.sort.
+ *      https://developer.android.com/reference/android/view/View#getTag()
+ *      https://stackoverflow.com/questions/2694663/android-attach-data-to-views
+ *          These pages discuss the View.getTag() and .setTag() methods.
  * @author Caleb Fullmer
  * @since June 23 2020
  * @version 1.1
