@@ -56,6 +56,10 @@ public class ServerRequest {
             return null;
         }
 
+        if (variableKeys == null) {
+            variableKeys = "";
+        }
+
         try {
             String charset = null;
             String jsonResponse = "";

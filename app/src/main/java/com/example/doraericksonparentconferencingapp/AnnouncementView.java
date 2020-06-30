@@ -1,8 +1,25 @@
 package com.example.doraericksonparentconferencingapp;
 
+import android.app.AppComponentFactory;
+import android.app.Application;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RectShape;
+import android.graphics.drawable.shapes.Shape;
+import android.util.TypedValue;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.Constraints;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -12,16 +29,30 @@ import java.util.Date;
 /**
  * <h3>AnnouncementView class</h3>
  * Extends LinearLayout. Used to display message items and announcements.
+ * References:
+ *      https://stackoverflow.com/questions/6798867/android-how-to-programmatically-set-the-size-of-a-layout/25540159
+ *      https://stackoverflow.com/questions/15636401/how-to-set-margins-for-textview-programmatically
+ *          These stack overflow posts discuss how to set layout params
+ *          parameters programmatically.
+ *      https://stackoverflow.com/questions/45263159/constraintlayout-change-constraints-programmatically
+ *          
  * @author Caleb Fullmer
- * @since June 12, 2020
- * @version 0.1
+ * @since June 29, 2020
+ * @version 1.0
  */
-public class AnnouncementView extends LinearLayout {
+public class AnnouncementView extends ConstraintLayout {
     private TextView sender = null;
     private TextView subject = null;
     private TextView sentDate = null;
     private TextView recipient = null;
     private TextView message = null;
+
+    //Generate new Id's for the AnnouncementView's child Views.
+    private int senderId = generateViewId();
+    private int subjectId = generateViewId();
+    private int sentDateId = generateViewId();
+    private int recipientId = generateViewId();
+    private int messageId = generateViewId();
 
     //Constructors
     /**
@@ -33,22 +64,22 @@ public class AnnouncementView extends LinearLayout {
      */
     public AnnouncementView(Context context, boolean showRecipient) {
         super(context);
-        setOrientation(LinearLayout.VERTICAL);
 
+        //Set attributes for AnnouncementView
+        setBackgroundResource(R.drawable.background_announc_view);
+        getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+        getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+
+        makeRecipient();
         makeSender();
         makeSubject();
         makeSentDate();
-        makeRecipient();
         makeMessage();
 
+        addView(recipient);
         addView(sender);
         addView(subject);
         addView(sentDate);
-
-        if (showRecipient) {
-            addView(recipient);
-        }
-
         addView(message);
     }
 
@@ -59,6 +90,15 @@ public class AnnouncementView extends LinearLayout {
     private void makeSender() {
         sender = new TextView(getContext());
         //Set up the appropreate textview fields.
+        sender.setText("To:");
+        sender.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+        sender.setId(senderId);
+
+        //Set constraints.
+
+        ConstraintLayout.LayoutParams newLayout = new Constraints.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
+        newLayout.setMargins(14, 5, 15, 0);
+        sender.setLayoutParams(newLayout);
     }
 
     /**

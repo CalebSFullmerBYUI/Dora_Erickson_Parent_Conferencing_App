@@ -77,8 +77,30 @@ public class ScheduleActivity extends AppCompatActivity {
                     //ScheduleJson replaced with mockResponse.
                     String mockResponse = "{'announcements': [" +
                             "{'sender': 'admin1', 'subject': 'New School Policy', 'message': " +
-                            "'We will be implementing a new school policy starting October 12, 2020. It requires students to be on time to class.', " +
-                            "'sentDate': '1598652343', 'dueDate': 0, 'isHomework': false}," +
+                            "'We will be implementing a new school policy starting October 12, 2020. " +
+                            "It requires students to be on time to class.', " +
+                            "'sentDate': 1598652343, 'dueDate': 0, 'isHomework': false}," +
+
+                            "{'sender': 'admin1', 'subject': 'Welcome Back Event', 'message': " +
+                            "'The school will be hosting a welcome back event for the start of the " +
+                            "school year on September 4th.', " +
+                            "'sentDate': 1598652343, 'dueDate': 1599689143, 'isHomework': true}," +
+
+                            "{'sender': 'admin3', 'subject': 'PTO Meeting on August 24', 'message': " +
+                            "'We will be having a PTO meeting on August 24th to discuss the upcoming school year.', " +
+                            "'sentDate': 1598652343, 'dueDate': 1598306743, 'isHomework': true}," +
+
+                            "{'sender': 'admin1', 'subject': 'Gradebook Changes', 'message': " +
+                            "'Starting September 4th, there will be changes to the Gradebook app. Check PowerSchool for more details.', " +
+                            "'sentDate': 1598652343, 'dueDate': 0, 'isHomework': false}," +
+
+                            "{'sender': '', 'subject': '', 'message': " +
+                            "'', " +
+                            "'sentDate': 1598652343, 'dueDate': 0, 'isHomework': false}," +
+
+                            "{'sender': '', 'subject': '', 'message': " +
+                            "'', " +
+                            "'sentDate': 1598652343, 'dueDate': 0, 'isHomework': false}," +
                             "]}";
 
                     newSchedule = new Gson().fromJson(mockResponse/*scheduleJson*/, ScheduleItemVector.class).getVector();

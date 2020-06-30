@@ -157,6 +157,8 @@ public class DirectoryActivity extends AppCompatActivity {
             gradeSortTeachers = new TreeMap<String, ArrayList<TeacherItem>>();
         }
 
+        ((LinearLayout)findViewById(R.id.linLay_Directory)).removeAllViews();
+
 
         //Iterate through bst and loop through each array.
         for (Map.Entry<String, ArrayList<TeacherItem>> it: gradeSortTeachers.entrySet()) {

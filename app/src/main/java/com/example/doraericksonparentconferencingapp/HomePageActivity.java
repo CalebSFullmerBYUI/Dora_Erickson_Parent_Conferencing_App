@@ -4,15 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.UserHandle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.net.UnknownServiceException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -33,16 +32,11 @@ public class HomePageActivity extends AppCompatActivity {
     private ArrayList<ScheduleItem> announcements = new ArrayList<ScheduleItem>();
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MMM d, yyyy 'at' hh:mm a");
     public static final String USER_KEY = "currentUser";
-    public ArrayAdapter<AnnouncementView> announceAdapter = new ArrayAdapter<AnnouncementView>(this,
-            android.R.layout.simple_list_item_1, new ArrayList<AnnouncementView>());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
-
-        //Set up adapter for announcements listview.
-        ((ListView)findViewById(R.id.lstView_Announcements)).setAdapter(announceAdapter);
 
         if (MainActivity.UNIQUE_ID != null) {
             //Get user info
@@ -102,20 +96,20 @@ public class HomePageActivity extends AppCompatActivity {
                             "{'sender': 'admin1', 'subject': " +
                             "'New School Policy', 'message': 'We will be implementing a new " +
                             "school policy starting October 12, 2020. It requires students to " +
-                            "be on time to class.', 'sentDate': '1598652343', 'dueDate': 0, " +
+                            "be on time to class.', 'sentDate': 1598652343, 'dueDate': 0, " +
                             "'isHomework': false}," +
                             "{'sender': 'admin1', 'subject': 'Welcome Back Event', 'message': " +
                             "'The school will be hosting a welcome back event for the start of " +
-                            "the school year on September 4th.', 'sentDate': '1597356343', 'dueDate': " +
+                            "the school year on September 4th.', 'sentDate': 1597356343, 'dueDate': " +
                             "1599689143, 'isHomework': true}," +
                             "{'sender': 'admin3', 'subject': 'PTO Meeting on August 24', 'message': " +
                             "'We will be having a PTO meeting on August 24th to discuss the upcoming " +
-                            "school year.', 'sentDate': '1598652343', 'dueDate': 1598306743, " +
+                            "school year.', 'sentDate': 1598652343, 'dueDate': 1598306743, " +
                             "'isHomework': true}," +
                             "{'sender': 'admin1', 'subject': 'Gradebook Changes', 'message': " +
                             "'Starting September 4th, there will be changes to the Gradebook app. " +
-                            "Check PowerSchool for more details.', 'sentDate': '1598652343', " +
-                            "'dueDate': null, 'isHomework': false}" +
+                            "Check PowerSchool for more details.', 'sentDate': 1598652343, " +
+                            "'dueDate': 0, 'isHomework': false}" +
                             "]}";
                      updatedAnnouncements = convertJson.fromJson(mockResponse/*responseJson*/,
                             ScheduleItemVector.class);
@@ -149,12 +143,7 @@ public class HomePageActivity extends AppCompatActivity {
             announcements = new ArrayList<ScheduleItem>();
         }
 
-        if (announceAdapter == null) {
-            announceAdapter = new ArrayAdapter<AnnouncementView>(this,
-                    android.R.layout.simple_list_item_1, new ArrayList<AnnouncementView>());
-        }
-
-        announceAdapter.clear();
+        ((LinearLayout)findViewById(R.id.linLay_Announcements)).removeAllViews();
 
         for (SchedlueItem item: announcements) {
             if (item != null) {
@@ -163,7 +152,7 @@ public class HomePageActivity extends AppCompatActivity {
                 newAnnouncement.setSubject(item.getSubject());
                 newAnnouncement.setSentDate(DATE_FORMAT.format(item.getDate()));
                 newAnnouncement.setMessage(item.getMessage());
-                announceAdapter.add(newAnnouncement);
+                ((LinearLayout)findViewById(R.id.linLay_Announcements)).addView(newAnnouncement);
             }
         }
     }
