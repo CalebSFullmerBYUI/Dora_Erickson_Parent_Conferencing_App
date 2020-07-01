@@ -4,6 +4,7 @@ import android.app.AppComponentFactory;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.constraintlayout.widget.Constraints;
 
 import java.text.SimpleDateFormat;
@@ -35,7 +37,8 @@ import java.util.Date;
  *          These stack overflow posts discuss how to set layout params
  *          parameters programmatically.
  *      https://stackoverflow.com/questions/45263159/constraintlayout-change-constraints-programmatically
- *          
+ *      https://developer.android.com/reference/androidx/constraintlayout/widget/ConstraintSet
+ *          These webpages discuss how to set ConstraintLayout constraints programmatically.
  * @author Caleb Fullmer
  * @since June 29, 2020
  * @version 1.0
@@ -47,12 +50,13 @@ public class AnnouncementView extends ConstraintLayout {
     private TextView recipient = null;
     private TextView message = null;
 
-    //Generate new Id's for the AnnouncementView's child Views.
-    private int senderId = generateViewId();
-    private int subjectId = generateViewId();
-    private int sentDateId = generateViewId();
-    private int recipientId = generateViewId();
-    private int messageId = generateViewId();
+    //Generate new Id's for the AnnouncementView and child Views.
+    private final int senderId = generateViewId();
+    private final int subjectId = generateViewId();
+    private final int sentDateId = generateViewId();
+    private final int recipientId = generateViewId();
+    private final int messageId = generateViewId();
+    private final int announceViewId = generateViewId();
 
     //Constructors
     /**
@@ -66,9 +70,16 @@ public class AnnouncementView extends ConstraintLayout {
         super(context);
 
         //Set attributes for AnnouncementView
+        makeAnnouncementView();
+    }
+
+    /**
+     * <h3>makeAnnouncementView</h3>
+     * Defines constraints, attributes, and child views for the AnnouncementView.
+     */
+    private void makeAnnouncementView() {
         setBackgroundResource(R.drawable.background_announc_view);
-        getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
-        getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+        setId(announceViewId);
 
         makeRecipient();
         makeSender();
@@ -81,6 +92,55 @@ public class AnnouncementView extends ConstraintLayout {
         addView(subject);
         addView(sentDate);
         addView(message);
+
+
+        //Paranoia (Ensures make functions correctly assigned Id's)
+        assert(recipient.getId() == recipientId);
+        assert(sender.getId() == senderId);
+        assert(subject.getId() == subjectId);
+        assert(sentDate.getId() == sentDateId);
+        assert(message.getId() == messageId);
+        assert(getId() == announceViewId);
+
+
+        //Set constraints.
+        ConstraintSet newConstraints = new ConstraintSet();
+        newConstraints.clone(this);
+        //Constraints for recipient.
+        newConstraints.connect(recipientId, ConstraintSet.TOP, announceViewId, ConstraintSet.TOP);
+        newConstraints.connect(recipientId, ConstraintSet.BOTTOM, senderId, ConstraintSet.TOP);
+        newConstraints.connect(recipientId, ConstraintSet.START, announceViewId, ConstraintSet.START);
+        newConstraints.connect(recipientId, ConstraintSet.END, announceViewId, ConstraintSet.END);
+
+        //Constraints for sender
+        newConstraints.connect(senderId, ConstraintSet.TOP, recipientId, ConstraintSet.BOTTOM);
+        newConstraints.connect(senderId, ConstraintSet.BOTTOM, subjectId, ConstraintSet.TOP);
+        newConstraints.connect(senderId, ConstraintSet.START, announceViewId, ConstraintSet.START);
+        newConstraints.connect(senderId, ConstraintSet.END, announceViewId, ConstraintSet.END);
+
+        //Constraints for subject
+        newConstraints.connect(subjectId, ConstraintSet.TOP, senderId, ConstraintSet.BOTTOM);
+        newConstraints.connect(subjectId, ConstraintSet.BOTTOM, sentDateId, ConstraintSet.TOP);
+        newConstraints.connect(subjectId, ConstraintSet.START, announceViewId, ConstraintSet.START);
+        newConstraints.connect(subjectId, ConstraintSet.END, announceViewId, ConstraintSet.END);
+
+        //Constraints for sentDate
+        newConstraints.connect(sentDateId, ConstraintSet.TOP, subjectId, ConstraintSet.BOTTOM);
+        newConstraints.connect(sentDateId, ConstraintSet.BOTTOM, messageId, ConstraintSet.TOP);
+        newConstraints.connect(sentDateId, ConstraintSet.START, announceViewId, ConstraintSet.START);
+        newConstraints.connect(sentDateId, ConstraintSet.END, announceViewId, ConstraintSet.END);
+
+        //Constraints for message
+        newConstraints.connect(messageId, ConstraintSet.TOP, sentDateId, ConstraintSet.BOTTOM);
+        newConstraints.connect(messageId, ConstraintSet.BOTTOM, announceViewId, ConstraintSet.BOTTOM);
+        newConstraints.connect(messageId, ConstraintSet.START, announceViewId, ConstraintSet.START);
+        newConstraints.connect(messageId, ConstraintSet.END, announceViewId, ConstraintSet.END);
+
+        //Add constraints to layout.
+        newConstraints.applyTo(this);
+
+        LayoutParams newLayout = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        setLayoutParams(newLayout);
     }
 
     /**
@@ -90,11 +150,11 @@ public class AnnouncementView extends ConstraintLayout {
     private void makeSender() {
         sender = new TextView(getContext());
         //Set up the appropreate textview fields.
-        sender.setText("To:");
+        sender.setText("From:");
         sender.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         sender.setId(senderId);
 
-        //Set constraints.
+        sender.setTextColor(Color.BLACK);
 
         ConstraintLayout.LayoutParams newLayout = new Constraints.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
         newLayout.setMargins(14, 5, 15, 0);
@@ -108,6 +168,15 @@ public class AnnouncementView extends ConstraintLayout {
     private void makeSubject() {
         subject = new TextView(getContext());
         //Set up appropreate textview fields.
+        subject.setText("Subject:");
+        subject.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+        subject.setId(subjectId);
+
+        subject.setTextColor(Color.BLACK);
+
+        ConstraintLayout.LayoutParams newLayout = new Constraints.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
+        newLayout.setMargins(14, 5, 15, 0);
+        subject.setLayoutParams(newLayout);
     }
 
     /**
@@ -117,6 +186,15 @@ public class AnnouncementView extends ConstraintLayout {
     private void makeSentDate() {
         sentDate = new TextView(getContext());
         //Set up appropreate textview fields.
+        sentDate.setText("Date:");
+        sentDate.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+        sentDate.setId(sentDateId);
+
+        sentDate.setTextColor(Color.BLACK);
+
+        ConstraintLayout.LayoutParams newLayout = new Constraints.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
+        newLayout.setMargins(14, 5, 15, 0);
+        sentDate.setLayoutParams(newLayout);
     }
 
     /**
@@ -126,6 +204,15 @@ public class AnnouncementView extends ConstraintLayout {
     private void makeRecipient() {
         recipient = new TextView(getContext());
         //Set up appropreate textview fields.
+        recipient.setText("Recipient:");
+        recipient.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+        recipient.setId(recipientId);
+
+        recipient.setTextColor(Color.BLACK);
+
+        ConstraintLayout.LayoutParams newLayout = new Constraints.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
+        newLayout.setMargins(14, 5, 15, 0);
+        recipient.setLayoutParams(newLayout);
     }
 
     /**
@@ -135,6 +222,17 @@ public class AnnouncementView extends ConstraintLayout {
     private void makeMessage() {
         message = new TextView(getContext());
         //Set up appropreate textview fields.
+        message.setText("From:");
+        message.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+        message.setId(messageId);
+
+        message.setPadding(3, 2, 3, 2);
+        message.setBackgroundColor(Color.argb(255, 250, 250, 250));
+        message.setTextColor(Color.BLACK);
+
+        ConstraintLayout.LayoutParams newLayout = new Constraints.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
+        newLayout.setMargins(14, 5, 15, 10);
+        message.setLayoutParams(newLayout);
     }
 
 
@@ -148,7 +246,7 @@ public class AnnouncementView extends ConstraintLayout {
      */
     public String getSender() {
         if (sender == null) {
-            makeSender();
+            makeAnnouncementView();
             sender.setText("");
         }
         return (String)sender.getText();
@@ -161,7 +259,7 @@ public class AnnouncementView extends ConstraintLayout {
      */
     public void setSender(String sender) {
         if (this.sender == null) {
-            makeSender();
+            makeAnnouncementView();
         }
 
         if (sender != null) {
@@ -178,7 +276,7 @@ public class AnnouncementView extends ConstraintLayout {
      */
     public String getSubject() {
         if (subject == null) {
-            makeSubject();
+            makeAnnouncementView();
             subject.setText("");
         }
         return (String)subject.getText();
@@ -191,7 +289,7 @@ public class AnnouncementView extends ConstraintLayout {
      */
     public void setSubject(String subject) {
         if (this.subject == null) {
-            makeSender();
+            makeAnnouncementView();
         }
 
         if (subject != null) {
@@ -218,7 +316,7 @@ public class AnnouncementView extends ConstraintLayout {
      */
     public void setSentDate(Date date) {
         if (this.sentDate == null) {
-            makeSentDate();
+            makeAnnouncementView();
         }
 
         if (date != null) {
@@ -235,7 +333,7 @@ public class AnnouncementView extends ConstraintLayout {
      */
     public String getRecipient() {
         if (recipient == null) {
-            makeRecipient();
+            makeAnnouncementView();
             recipient.setText("");
         }
         return (String)recipient.getText();
@@ -248,7 +346,7 @@ public class AnnouncementView extends ConstraintLayout {
      */
     public void setRecipient(String recipient) {
         if (this.recipient == null) {
-            makeRecipient();
+            makeAnnouncementView();
         }
 
         if (recipient != null) {
@@ -265,7 +363,7 @@ public class AnnouncementView extends ConstraintLayout {
      */
     public String getMessage() {
         if (message == null) {
-            makeMessage();
+            makeAnnouncementView();
             message.setText("");
         }
         return (String)message.getText();
@@ -278,7 +376,7 @@ public class AnnouncementView extends ConstraintLayout {
      */
     public void setMessage(String message) {
         if (this.message == null) {
-            makeMessage();
+            makeAnnouncementView();
         }
 
         if (message != null) {
