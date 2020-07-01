@@ -80,6 +80,8 @@ public class AnnouncementView extends ConstraintLayout {
     private void makeAnnouncementView() {
         setBackgroundResource(R.drawable.background_announc_view);
         setId(announceViewId);
+        LayoutParams newLayout = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        setLayoutParams(newLayout);
 
         makeRecipient();
         makeSender();
@@ -138,9 +140,6 @@ public class AnnouncementView extends ConstraintLayout {
 
         //Add constraints to layout.
         newConstraints.applyTo(this);
-
-        LayoutParams newLayout = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        setLayoutParams(newLayout);
     }
 
     /**

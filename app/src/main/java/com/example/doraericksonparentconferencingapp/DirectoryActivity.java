@@ -181,7 +181,7 @@ public class DirectoryActivity extends AppCompatActivity {
                             }
                         });
 
-                        newGradeView.addTeacherBtn(item, newButton);
+                        newGradeView.addTeacherBtn(item.getName(), newButton);
                     }
                 }
 
