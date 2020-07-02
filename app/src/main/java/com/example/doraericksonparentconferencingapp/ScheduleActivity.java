@@ -8,10 +8,12 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -143,6 +145,32 @@ public class ScheduleActivity extends AppCompatActivity {
             sortedSchedule = new TreeMap<String, ArrayList<ScheduleItem>>();
         }
 
+
+
+        //Update the date label TextView
+        String label = "";
+        Date dateLabel = null;
+        TextView txtV_DateLabel = ((TextView)findViewById(R.id.txtV_DateLabel));
+        final SimpleDateFormat parsingFormat = new SimpleDateFormat("yyyywu");
+        final SimpleDateFormat formattingFormat = new SimpleDateFormat("MMM/d/yy");
+        final SimpleDateFormat dayInMonthFormat = new SimpleDateFormat("d");
+
+        try {
+            dateLabel = parsingFormat.parse( currentYear + currentWeek + "7");
+            label += formattingFormat.format(dateLabel) + " - ";
+            dateLabel = parsingFormat.parse(currentYear + currentWeek + "6");
+            label += formattingFormat.format(dateLabel);
+            txtV_DateLabel.setText(label);
+        } catch (ParseException e) {
+            Log.e("ScheduleActivity.displayInfo()", "Issue parsing date: " + e.getMessage());
+            txtV_DateLabel.setText("--");
+        } catch (Exception e) {
+            Log.e("ScheduleActivity.displayInfo()", e.getMessage());
+            txtV_DateLabel.setText("--");
+        }
+
+
+
         //Clear schedule views.
         ((LinearLayout)findViewById(R.id.linLay_SundaySchedule)).removeAllViews();
         ((LinearLayout)findViewById(R.id.linLay_MondaySchedule)).removeAllViews();
@@ -203,6 +231,7 @@ public class ScheduleActivity extends AppCompatActivity {
                                 //Saturday
                                 break;
                             default:
+                                ((LinearLayout)findViewById(R.id.linLay_SundaySchedule)).addView(newView);
                                 Log.e("ScheduleActivity.Display()",
                                         "Day of week value not recognized.");
                                 break;
@@ -283,7 +312,7 @@ public class ScheduleActivity extends AppCompatActivity {
              */
             if ((weekOfYear == 1) && (dayOfMonth > 15)) {
                 year++;
-            } else if ((weekOfYear == 52) && (dayOfMonth < 15)) {
+            } else if ((weekOfYear >= 52) && (dayOfMonth < 8)) {
                 year--;
             }
 
@@ -344,8 +373,20 @@ public class ScheduleActivity extends AppCompatActivity {
         currentWeek += 1;
 
         if (currentWeek > 52) {
-            currentWeek = 1;
-            currentYear += 1;
+            Date newDate = null;
+
+            try {
+                newDate = new SimpleDateFormat("yyyyw").parse(currentYear + "53");
+
+                if (Integer.parseInt(new SimpleDateFormat("d").format(newDate)) > 25) {
+                    currentWeek = 1;
+                    currentYear += 1;
+                }
+            } catch (Exception e) {
+                Log.e("ScheduleActivity.loadNextWeek", "Parse Error:" + e.getMessage());
+                currentWeek = 1;
+                currentYear += 1;
+            }
         }
 
         displayInfo();
@@ -360,7 +401,21 @@ public class ScheduleActivity extends AppCompatActivity {
         currentWeek -= 1;
 
         if (currentWeek < 1) {
-            currentWeek = 52;
+            Date newDate = null;
+
+            try {
+                newDate = new SimpleDateFormat("yyyyw").parse(currentYear + "1");
+
+                if (Integer.parseInt(new SimpleDateFormat("d").format(newDate)) == 1) {
+                    currentWeek = 53;
+                } else {
+                    currentWeek = 52;
+                }
+            } catch (Exception e) {
+                Log.e("ScheduleActivity.loadNextWeek", "Parse Error:" + e.getMessage());
+                currentWeek = 52;
+            }
+
             currentYear -= 1;
         }
 
