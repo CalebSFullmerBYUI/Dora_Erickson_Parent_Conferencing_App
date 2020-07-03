@@ -147,19 +147,44 @@ public class ScheduleActivity extends AppCompatActivity {
 
 
 
-        //Update the date label TextView
+        //Update the date label TextViews
         String label = "";
         Date dateLabel = null;
         TextView txtV_DateLabel = ((TextView)findViewById(R.id.txtV_DateLabel));
         final SimpleDateFormat parsingFormat = new SimpleDateFormat("yyyywu");
         final SimpleDateFormat formattingFormat = new SimpleDateFormat("MMM/d/yy");
-        final SimpleDateFormat dayInMonthFormat = new SimpleDateFormat("d");
 
         try {
+            //Sunday
             dateLabel = parsingFormat.parse( currentYear + currentWeek + "7");
-            label += formattingFormat.format(dateLabel) + " - ";
+            ((TextView)findViewById(R.id.txtV_Sunday)).setText("Sunday " + formattingFormat.format(dateLabel));
+            label += (formattingFormat.format(dateLabel) + " - ");
+
+            //Monday
+            dateLabel = parsingFormat.parse(currentYear + currentWeek + "1");
+            ((TextView)findViewById(R.id.txtV_Monday)).setText("Monday " + formattingFormat.format(dateLabel));
+
+            //Tuesday
+            dateLabel = parsingFormat.parse(currentYear + currentWeek + "2");
+            ((TextView)findViewById(R.id.txtV_Tuesday)).setText("Tuesday " + formattingFormat.format(dateLabel));
+
+            //Wednesday
+            dateLabel = parsingFormat.parse(currentYear + currentWeek + "3");
+            ((TextView)findViewById(R.id.txtV_Wednesday)).setText("Wednesday " + formattingFormat.format(dateLabel));
+
+            //Thursday
+            dateLabel = parsingFormat.parse(currentYear + currentWeek + "4");
+            ((TextView)findViewById(R.id.txtV_Thursday)).setText("Thursday " + formattingFormat.format(dateLabel));
+
+            //Friday
+            dateLabel = parsingFormat.parse(currentYear + currentWeek + "5");
+            ((TextView)findViewById(R.id.txtV_Friday)).setText("Friday " + formattingFormat.format(dateLabel));
+
+            //Saturday
             dateLabel = parsingFormat.parse(currentYear + currentWeek + "6");
+            ((TextView)findViewById(R.id.txtV_Saturday)).setText("Saturday " + formattingFormat.format(dateLabel));
             label += formattingFormat.format(dateLabel);
+
             txtV_DateLabel.setText(label);
         } catch (ParseException e) {
             Log.e("ScheduleActivity.displayInfo()", "Issue parsing date: " + e.getMessage());
@@ -378,7 +403,8 @@ public class ScheduleActivity extends AppCompatActivity {
             try {
                 newDate = new SimpleDateFormat("yyyyw").parse(currentYear + "53");
 
-                if (Integer.parseInt(new SimpleDateFormat("d").format(newDate)) > 25) {
+                if ((Integer.parseInt(dayInMonth.format(newDate)) > 25) ||
+                        (currentWeek > 54)) {
                     currentWeek = 1;
                     currentYear += 1;
                 }
@@ -406,7 +432,7 @@ public class ScheduleActivity extends AppCompatActivity {
             try {
                 newDate = new SimpleDateFormat("yyyyw").parse(currentYear + "1");
 
-                if (Integer.parseInt(new SimpleDateFormat("d").format(newDate)) == 1) {
+                if (Integer.parseInt(dayInMonth.format(newDate)) == 1) {
                     currentWeek = 53;
                 } else {
                     currentWeek = 52;
