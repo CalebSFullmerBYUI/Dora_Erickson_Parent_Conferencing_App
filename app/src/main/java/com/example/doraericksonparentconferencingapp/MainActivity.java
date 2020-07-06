@@ -19,6 +19,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        UNIQUE_ID = getSharedPreferences(ID_KEY, MODE_PRIVATE).getString(ID_KEY, "fail");
+
+        if ((UNIQUE_ID != null) && !UNIQUE_ID.equals("")) {
+            //Check that server accepts id. if so, start home page activity.
+        }
     }
 
     public void recover (View view) {
