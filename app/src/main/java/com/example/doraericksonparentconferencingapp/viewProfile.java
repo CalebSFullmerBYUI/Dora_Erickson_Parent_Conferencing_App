@@ -1,4 +1,4 @@
-package com.example.cs246project;
+package com.example.doraericksonparentconferencingapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,10 +19,10 @@ public class viewProfile extends AppCompatActivity {
     private User currentUser;
 
     public void changeUsername(View view) {
-        startActivity(new Intent(viewProfile.this, ResetAccountActivity.class));
+        //startActivity(new Intent(viewProfile.this, ResetAccountActivity.class));
         }
     public void changePassword(View view) {
-        startActivity(new Intent(viewProfile.this, ResetAccountActivity.class));
+        //startActivity(new Intent(viewProfile.this, ResetAccountActivity.class));
     }
     public void removeSubscription(View view) {
         // find subscription in list and remove it

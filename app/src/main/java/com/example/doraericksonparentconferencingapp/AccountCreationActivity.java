@@ -1,4 +1,4 @@
-package com.example.cs246project;
+package com.example.doraericksonparentconferencingapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;

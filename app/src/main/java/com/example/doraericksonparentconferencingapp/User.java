@@ -1,4 +1,4 @@
-package com.example.cs246project;
+package com.example.doraericksonparentconferencingapp;
 
 /*****
 
