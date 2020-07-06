@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.security.cert.Certificate;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -30,7 +31,9 @@ import javax.net.ssl.SSLPeerUnverifiedException;
  */
 public class ServerRequest {
     //Put main path to server here. Should direct request to head server file.
-    private final String SERVER = "";
+    // This is just a mock server. It just ensures that the server requests connects to
+    // something.
+    private final String SERVER = "https://run.mocky.io/v3/1c5c80fb-ca58-4283-a3e8-adeb44f98ce5";
 
 
     /**
@@ -53,42 +56,17 @@ public class ServerRequest {
             return null;
         }
 
+        if (variableKeys == null) {
+            variableKeys = "";
+        }
+
         try {
             String charset = null;
             String jsonResponse = "";
             String responseHeader = "";
             InputStream response = null;
-            HttpsURLConnection connection = new HttpsURLConnection(new URL(SERVER + filePath + variableKeys)) {
-                @Override
-                public String getCipherSuite() {
-                    return null;
-                }
-
-                @Override
-                public Certificate[] getLocalCertificates() {
-                    return new Certificate[0];
-                }
-
-                @Override
-                public Certificate[] getServerCertificates() throws SSLPeerUnverifiedException {
-                    return new Certificate[0];
-                }
-
-                @Override
-                public void disconnect() {
-
-                }
-
-                @Override
-                public boolean usingProxy() {
-                    return false;
-                }
-
-                @Override
-                public void connect() throws IOException {
-
-                }
-            };
+            //Preferably this will be a secure HttpsURLConnection if prototype is accepted.
+            URLConnection connection = new URL(SERVER + filePath + variableKeys).openConnection();
 
             //Connection will timeout if it takes more than 45 seconds.
             connection.setConnectTimeout(45000);
@@ -116,6 +94,12 @@ public class ServerRequest {
                 if (newline != null) {
                     newline = reader.readLine();
                 }
+            }
+
+            //Just a test to ensure the connection to the mock server was successfull.
+            if (!jsonResponse.equals("This just returns if the response worked correctly.")) {
+                Log.d("ServerRequest", "Incorrect response");
+                throw new Exception("Unexpected Server Response");
             }
 
             return jsonResponse;
