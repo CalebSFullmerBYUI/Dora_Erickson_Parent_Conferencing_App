@@ -16,6 +16,7 @@ public class User {
     private String name;
     private String email;
     private String classroom;
+    private String uniqueId;
     private int classId;
     private boolean isAdmin;
 
@@ -26,6 +27,7 @@ public class User {
         setClassroom("N/A");
         setClassId(0);
         setAdmin(isAdmin);
+        setUniqueId("");
     }
     public User(User user) {
         setName(user.getName());
@@ -33,6 +35,7 @@ public class User {
         setClassroom(user.getClassroom());
         setClassId(user.getClassId());
         setAdmin(user.isAdmin());
+        setUniqueId("");
     }
 
     // Getters and setters
@@ -50,4 +53,13 @@ public class User {
 
     public boolean isAdmin() { return isAdmin; }
     public void setAdmin(boolean isAdmin) { this.isAdmin = isAdmin; }
+
+    public String getUniqueId() {return uniqueId;}
+    public void setUniqueId(String uniqueId) {
+        if (uniqueId == null) {
+            uniqueId = "";
+        }
+
+        this.uniqueId = uniqueId;
+    }
 }
