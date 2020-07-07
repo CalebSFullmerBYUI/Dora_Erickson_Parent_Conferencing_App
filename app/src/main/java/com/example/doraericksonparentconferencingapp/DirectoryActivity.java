@@ -287,7 +287,7 @@ public class DirectoryActivity extends AppCompatActivity {
      */
     public void goToClassroom(View view) {
         if ((view.getTag() != null) && (view.getTag() instanceof Integer)) {
-            Intent newClassroom = new Intent(this, ClassroomsActivity.class);
+            Intent newClassroom = new Intent(this, ClassroomActivity.class);
             boolean isAdmin = false;
             int classId = (int)view.getTag();
 

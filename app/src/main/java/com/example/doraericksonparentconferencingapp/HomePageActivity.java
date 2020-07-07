@@ -196,7 +196,7 @@ public class HomePageActivity extends AppCompatActivity {
      * @param view (Type: View, the view object which triggered the method)
      */
     public void startClassroomsActivity(View view) {
-        Intent newClassroom = new Intent(this, ClassroomsActivity.class);
+        Intent newClassroom = new Intent(this, ClassroomActivity.class);
         newClassroom.putExtra(USER_KEY, new Gson().toJson(currentUser));
         startActivity(newClassroom);
     }
