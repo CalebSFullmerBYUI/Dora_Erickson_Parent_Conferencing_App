@@ -14,7 +14,10 @@
         <activity android:name=".LinksActivity" />
         <activity android:name=".HelpPageActivity" />
         <activity android:name=".HomePageActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".AccountRecoveryActivity" />
+        <activity android:name=".AccountCreationActivity" />
+        <activity android:name=".viewProfile" />
+        <activity android:name=".MainActivity">.
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
