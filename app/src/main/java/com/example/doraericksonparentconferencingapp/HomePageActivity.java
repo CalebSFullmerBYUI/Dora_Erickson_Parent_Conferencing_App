@@ -152,12 +152,12 @@ public class HomePageActivity extends AppCompatActivity {
 
         ((LinearLayout)findViewById(R.id.linLay_Announcements)).removeAllViews();
 
-        for (SchedlueItem item: announcements) {
+        for (ScheduleItem item: announcements) {
             if (item != null) {
                 AnnouncementView newAnnouncement = new AnnouncementView(getApplicationContext(), false);
                 newAnnouncement.setSender(item.getSender());
                 newAnnouncement.setSubject(item.getSubject());
-                newAnnouncement.setSentDate(DATE_FORMAT.format(item.getDate()));
+                newAnnouncement.setSentDate(item.getDate());
                 newAnnouncement.setMessage(item.getMessage());
                 ((LinearLayout)findViewById(R.id.linLay_Announcements)).addView(newAnnouncement);
             }
@@ -239,7 +239,7 @@ public class HomePageActivity extends AppCompatActivity {
      * @param view (Type: View, the view object which triggered the method)
      */
     public void startAccountActivity(View view) {
-        Intent newViewProfile = new Intent(this, ViewProfile.class);
+        Intent newViewProfile = new Intent(this, viewProfile.class);
         newViewProfile.putExtra(USER_KEY, new Gson().toJson(currentUser));
         startActivity(newViewProfile);
     }

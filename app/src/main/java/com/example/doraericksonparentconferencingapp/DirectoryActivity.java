@@ -41,7 +41,7 @@ import java.util.TreeMap;
  */
 public class DirectoryActivity extends AppCompatActivity {
     //Variables
-    private ArrayList<TeacherItem> teachers = new ArrayListist<TeacherItem>();
+    private ArrayList<TeacherItem> teachers = new ArrayList<TeacherItem>();
     private TreeMap<String, ArrayList<TeacherItem>> gradeSortTeachers =
             new TreeMap<String, ArrayList<TeacherItem>>();
     private User currentUser = null;
@@ -55,7 +55,7 @@ public class DirectoryActivity extends AppCompatActivity {
             currentUser = new Gson().fromJson(getIntent().getStringExtra(HomePageActivity.USER_KEY), User.class);
         } else {
             Log.e("DirectoryActivity.onCreate()", "Error: No known User passed in.");
-            currentUser = User("John Doe", false);
+            currentUser = new User("John Doe", false);
 
             Toast errorToast = Toast.makeText(getApplicationContext(), "User not recognized.", Toast.LENGTH_LONG);
             errorToast.show();
@@ -150,7 +150,7 @@ public class DirectoryActivity extends AppCompatActivity {
      */
     public void displayDirectory() {
         if (teachers == null) {
-            teachers = new ArrayListist<TeacherItem>();
+            teachers = new ArrayList<TeacherItem>();
         }
 
         if (gradeSortTeachers == null) {
@@ -294,7 +294,7 @@ public class DirectoryActivity extends AppCompatActivity {
             /* Note, somehow needs access to current user. Could either have variable passed to it,
              * or HomePageActivity user could be static.
              */
-            if (currentUser.getIsAdmin() && (currentUser.getClassId() == classId)) {
+            if (currentUser.isAdmin() && (currentUser.getClassId() == classId)) {
                 isAdmin = true;
             }
 

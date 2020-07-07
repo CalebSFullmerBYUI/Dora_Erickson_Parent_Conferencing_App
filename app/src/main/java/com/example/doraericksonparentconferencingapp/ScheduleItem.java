@@ -2,7 +2,7 @@ package com.example.doraericksonparentconferencingapp;
 
 import java.util.Date;
 
-public class ScheduleItem {
+public class ScheduleItem extends TextInformation {
     private Date dueDate;
     private boolean isHomework;
 
