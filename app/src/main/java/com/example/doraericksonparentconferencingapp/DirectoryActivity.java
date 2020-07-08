@@ -140,6 +140,8 @@ public class DirectoryActivity extends AppCompatActivity {
                 });
             }
         });
+
+        getDirThread.start();
     }
 
     /**

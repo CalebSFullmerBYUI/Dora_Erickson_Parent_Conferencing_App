@@ -130,6 +130,8 @@ public class ScheduleActivity extends AppCompatActivity {
                 });
             }
         });
+
+        scheduleThread.start();
     }
 
     /**

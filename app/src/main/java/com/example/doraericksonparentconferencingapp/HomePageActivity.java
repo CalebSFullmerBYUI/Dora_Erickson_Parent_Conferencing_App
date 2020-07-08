@@ -79,6 +79,8 @@ public class HomePageActivity extends AppCompatActivity {
                     });
                 }
             });
+
+            startUp.start();
         }
     }
 
