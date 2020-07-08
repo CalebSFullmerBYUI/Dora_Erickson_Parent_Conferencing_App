@@ -45,22 +45,35 @@ public class MainActivity extends AppCompatActivity {
         FROM usernameTable
         INNER JOIN paswordTable ON usernameTableID = passwordTableID
         WHERE usernameTable.username == username && passwordTable.password == password*/
-        String strJson = new ServerRequest().request("", "");
+        Thread getServerDataThread = new Thread(new CustomRun(this) {
+            @Override
+            public void run() {
+                final String strJson = new ServerRequest().request("", "");
 
-        if ((strJson != null) && !strJson.equals("")) {
-            User newUser = new Gson().fromJson(strJson, User.class);
-            UNIQUE_ID = newUser.getUniqueId();
-            SharedPreferences.Editor newEditor = getSharedPreferences(ID_KEY, MODE_PRIVATE).edit();
-            newEditor.putString(ID_KEY, UNIQUE_ID);
-            newEditor.apply();
+                currentActivity.get().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if ((strJson != null) && !strJson.equals("")) {
+                            String mockUser = "{'name': 'John Doe', 'email': 'JohnDoe@fakeEmail.com', " +
+                                    "'classroom': '', 'classId': 0, 'isAdmin': false, 'uniqueId': 'FakeId'}";
+                            User newUser = new Gson().fromJson(mockUser/*strJson*/, User.class);
+                            UNIQUE_ID = newUser.getUniqueId();
+                            SharedPreferences.Editor newEditor = getSharedPreferences(ID_KEY, MODE_PRIVATE).edit();
+                            newEditor.putString(ID_KEY, UNIQUE_ID);
+                            newEditor.apply();
 
-            startActivity(new Intent(MainActivity.this, HomePageActivity.class));
-        } else {
-            Toast errorToast = Toast.makeText(getApplicationContext(), "Error logging in.", Toast.LENGTH_LONG);
-            errorToast.show();
-            Log.e("MainActivity.logIn()", "Invalid server response.");
-        }
+                            startActivity(new Intent(MainActivity.this, HomePageActivity.class));
+                        } else {
+                            Toast errorToast = Toast.makeText(getApplicationContext(), "Error logging in.", Toast.LENGTH_LONG);
+                            errorToast.show();
+                            Log.e("MainActivity.logIn()", "Invalid server response.");
+                        }
+                    }
+                });
+            }
+        });
 
+        getServerDataThread.start();
     }
 
 }

@@ -139,6 +139,8 @@ public class HomePageActivity extends AppCompatActivity {
                 });
             }
         });
+
+        updateAnnouncements.start();
     }
 
     /**

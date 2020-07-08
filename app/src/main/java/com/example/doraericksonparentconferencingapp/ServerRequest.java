@@ -53,7 +53,8 @@ public class ServerRequest {
      */
     public String request(String filePath, String variableKeys) {
         if ((filePath == null) || filePath.equals("")) {
-            return null;
+            //This has been commented out for testing purposes.
+            //return null;
         }
 
         if (variableKeys == null) {
@@ -69,7 +70,7 @@ public class ServerRequest {
             URLConnection connection = new URL(SERVER + filePath + variableKeys).openConnection();
 
             //Connection will timeout if it takes more than 45 seconds.
-            connection.setConnectTimeout(45000);
+            //connection.setConnectTimeout(45000);
             connection.connect();
             response = connection.getInputStream();
 
