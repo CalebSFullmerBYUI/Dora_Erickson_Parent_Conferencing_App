@@ -6,4 +6,117 @@
     android:layout_height="match_parent"
     tools:context=".NewMessageActivity">
 
+    <ScrollView
+        android:id="@+id/scrView_MessageContents"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/txt_Recipient"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="To"
+                android:inputType="textPersonName"
+                android:textColor="@android:color/black"
+                app:layout_constraintBottom_toTopOf="@+id/txt_Subject"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/txt_Subject"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Subject"
+                android:inputType="textPersonName"
+                android:textColor="@android:color/black"
+                app:layout_constraintBottom_toTopOf="@+id/txt_MessageContent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_Recipient" />
+
+            <EditText
+                android:id="@+id/txt_MessageContent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:gravity="start|top"
+                android:hint="---"
+                android:inputType="textMultiLine"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_Subject" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btn_DeleteMessage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="90dp"
+        android:layout_marginBottom="6dp"
+        android:onClick="delete"
+        android:text="Delete"
+        app:layout_constraintBottom_toTopOf="@+id/scrView_MessageContents"
+        app:layout_constraintEnd_toStartOf="@+id/btn_SaveDraft"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/btn_SaveDraft"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="26dp"
+        android:layout_marginBottom="6dp"
+        android:onClick="save"
+        android:text="Save"
+        app:layout_constraintBottom_toTopOf="@+id/scrView_MessageContents"
+        app:layout_constraintEnd_toStartOf="@+id/btn_SendMessage"
+        app:layout_constraintStart_toEndOf="@+id/btn_DeleteMessage"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/btn_SendMessage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="6dp"
+        android:onClick="send"
+        android:text="Send"
+        app:layout_constraintBottom_toTopOf="@+id/scrView_MessageContents"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_SaveDraft"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <View
+        android:id="@+id/divider10"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="3dp"
+        android:background="#272727"
+        app:layout_constraintBottom_toTopOf="@+id/scrView_MessageContents"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_DeleteMessage" />
 </androidx.constraintlayout.widget.ConstraintLayout>

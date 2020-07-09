@@ -3,7 +3,11 @@ package com.example.doraericksonparentconferencingapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 public class NewMessageActivity extends AppCompatActivity {
     private MessageItem message = null;
@@ -13,6 +17,22 @@ public class NewMessageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_message);
+
+        if (getIntent().getStringArrayExtra(HomePageActivity.USER_KEY) != null) {
+            currentUser = new Gson().fromJson(getIntent().getStringExtra(HomePageActivity.USER_KEY), User.class);
+        } else {
+            Log.e("DirectoryActivity.onCreate()", "Error: No known User passed in.");
+            currentUser = null;
+
+            Toast errorToast = Toast.makeText(getApplicationContext(), "User not recognized.", Toast.LENGTH_LONG);
+            errorToast.show();
+        }
+
+        message = new MessageItem();
+
+        if (currentUser != null) {
+            message.setSender(currentUser.getName());
+        }
     }
 
 
@@ -22,7 +42,43 @@ public class NewMessageActivity extends AppCompatActivity {
      * @param view (Type: View, the View which called the function)
      */
     public void send(View view) {
+        final MessageItem constMessage = message;
 
+        //Notify server that draft should be saved.
+        Thread sendThread = new Thread(new CustomRun(this) {
+            @Override
+            public void run() {
+                //Send message
+                String serverSendResponse = new ServerRequest().request("", ""/*"?keyName=" + new Gson().toJson(constMessage)*/);
+                //Delete draft from user draft page.
+                String serverDeleteResponse = new ServerRequest().request("", ""/*"?keyName=" + new Gson().toJson(constMessage)*/);
+                final String toastOutput;
+
+                if ((serverDeleteResponse == null) || serverDeleteResponse.equals("")) {
+                    Log.e("NewMessageActivity.Send()", "Error deleting file from server.");
+                }
+
+                //Determine status of save.
+                if ((serverSendResponse == null) || serverSendResponse.equals("")) {
+                    Log.e("NewMessageActivity.Send()", "Error sending message.");
+                    toastOutput = "Error sending message.";
+                } else {
+                    toastOutput = "Message Sent";
+                }
+
+                //Report save status to user.
+                currentActivity.get().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast statusToast = Toast.makeText(currentActivity.get().getApplicationContext(),
+                                toastOutput, Toast.LENGTH_LONG);
+                        statusToast.show();
+                    }
+                });
+            }
+        });
+
+        sendThread.start();
     }
 
     /**
@@ -32,7 +88,24 @@ public class NewMessageActivity extends AppCompatActivity {
      * @param view (Type: View, the View which called the function)
      */
     public void delete(View view) {
+        //Send message to server that this draft can be deleted.
+        final MessageItem constMessage = message;
 
+        //Notify server that message can be deleted.
+        Thread messageCanBeDeletedThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String serverResponse = new ServerRequest().request("", ""/*"?keyName=" + new Gson().toJson(constMessage)*/);
+
+                if ((serverResponse == null) || serverResponse.equals("")) {
+                    Log.e("NewMessageActivity.delete()", "Error deleting message from server.");
+                }
+            }
+        });
+
+        messageCanBeDeletedThread.start();
+
+        finish();
     }
 
     /**
@@ -40,7 +113,36 @@ public class NewMessageActivity extends AppCompatActivity {
      * Saves the message to the server as a draft.
      * @param view
      */
-    public void Save(View view) {
+    public void save(View view) {
+        final MessageItem constMessage = message;
 
+        //Notify server that draft should be saved.
+        Thread saveDraftThread = new Thread(new CustomRun(this) {
+            @Override
+            public void run() {
+                String serverResponse = new ServerRequest().request("", ""/*"?keyName=" + new Gson().toJson(constMessage)*/);
+                final String toastOutput;
+
+                //Determine status of save.
+                if ((serverResponse == null) || serverResponse.equals("")) {
+                    Log.e("NewMessageActivity.Save()", "Error saving message to server.");
+                    toastOutput = "Error saving message.";
+                } else {
+                    toastOutput = "Message Saved";
+                }
+
+                //Report save status to user.
+                currentActivity.get().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast statusToast = Toast.makeText(currentActivity.get().getApplicationContext(),
+                                toastOutput, Toast.LENGTH_LONG);
+                        statusToast.show();
+                    }
+                });
+            }
+        });
+
+        saveDraftThread.start();
     }
 }
