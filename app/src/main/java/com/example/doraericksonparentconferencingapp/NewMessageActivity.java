@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -32,6 +33,8 @@ public class NewMessageActivity extends AppCompatActivity {
 
         if (currentUser != null) {
             message.setSender(currentUser.getName());
+        } else {
+            message.setSender("");
         }
     }
 
@@ -42,43 +45,49 @@ public class NewMessageActivity extends AppCompatActivity {
      * @param view (Type: View, the View which called the function)
      */
     public void send(View view) {
+        getMessageData();
         final MessageItem constMessage = message;
 
         //Notify server that draft should be saved.
-        Thread sendThread = new Thread(new CustomRun(this) {
-            @Override
-            public void run() {
-                //Send message
-                String serverSendResponse = new ServerRequest().request("", ""/*"?keyName=" + new Gson().toJson(constMessage)*/);
-                //Delete draft from user draft page.
-                String serverDeleteResponse = new ServerRequest().request("", ""/*"?keyName=" + new Gson().toJson(constMessage)*/);
-                final String toastOutput;
+        if ((message.getSender() != null) && !message.getSender().equals("")) {
+            Thread sendThread = new Thread(new CustomRun(this) {
+                @Override
+                public void run() {
+                    //Send message
+                    String serverSendResponse = new ServerRequest().request("", ""/*"?keyName=" + new Gson().toJson(constMessage)*/);
+                    //Delete draft from user draft page.
+                    String serverDeleteResponse = new ServerRequest().request("", ""/*"?keyName=" + new Gson().toJson(constMessage)*/);
+                    final String toastOutput;
 
-                if ((serverDeleteResponse == null) || serverDeleteResponse.equals("")) {
-                    Log.e("NewMessageActivity.Send()", "Error deleting file from server.");
-                }
-
-                //Determine status of save.
-                if ((serverSendResponse == null) || serverSendResponse.equals("")) {
-                    Log.e("NewMessageActivity.Send()", "Error sending message.");
-                    toastOutput = "Error sending message.";
-                } else {
-                    toastOutput = "Message Sent";
-                }
-
-                //Report save status to user.
-                currentActivity.get().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast statusToast = Toast.makeText(currentActivity.get().getApplicationContext(),
-                                toastOutput, Toast.LENGTH_LONG);
-                        statusToast.show();
+                    if ((serverDeleteResponse == null) || serverDeleteResponse.equals("")) {
+                        Log.e("NewMessageActivity.Send()", "Error deleting file from server.");
                     }
-                });
-            }
-        });
 
-        sendThread.start();
+                    //Determine status of save.
+                    if ((serverSendResponse == null) || serverSendResponse.equals("")) {
+                        Log.e("NewMessageActivity.Send()", "Error sending message.");
+                        toastOutput = "Error sending message.";
+                    } else {
+                        toastOutput = "Message Sent";
+                    }
+
+                    //Report save status to user.
+                    currentActivity.get().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast statusToast = Toast.makeText(currentActivity.get().getApplicationContext(),
+                                    toastOutput, Toast.LENGTH_LONG);
+                            statusToast.show();
+                        }
+                    });
+                }
+            });
+
+            sendThread.start();
+        } else {
+            Toast noSenderToast = Toast.makeText(getApplicationContext(), "Can't Send, No Recipient", Toast.LENGTH_LONG);
+            noSenderToast.show();
+        }
     }
 
     /**
@@ -114,6 +123,7 @@ public class NewMessageActivity extends AppCompatActivity {
      * @param view
      */
     public void save(View view) {
+        getMessageData();
         final MessageItem constMessage = message;
 
         //Notify server that draft should be saved.
@@ -133,16 +143,40 @@ public class NewMessageActivity extends AppCompatActivity {
 
                 //Report save status to user.
                 currentActivity.get().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast statusToast = Toast.makeText(currentActivity.get().getApplicationContext(),
-                                toastOutput, Toast.LENGTH_LONG);
-                        statusToast.show();
-                    }
+                        @Override
+                        public void run() {
+                            Toast statusToast = Toast.makeText(currentActivity.get().getApplicationContext(),
+                                    toastOutput, Toast.LENGTH_LONG);
+                            statusToast.show();
+                        }
                 });
             }
         });
 
         saveDraftThread.start();
+    }
+
+
+    private void getMessageData() {
+        String recipient = ((TextView)findViewById(R.id.txt_Recipient)).getText().toString();
+        String subject = ((TextView)findViewById(R.id.txt_Subject)).getText().toString();
+        String message = ((TextView)findViewById(R.id.txt_MessageContent)).getText().toString();
+
+        if (recipient == null) {
+            recipient = "";
+        }
+
+        if (subject == null) {
+            subject = "";
+        }
+
+        if (message == null) {
+            message = "";
+        }
+
+
+        this.message.setRecipient(recipient);
+        this.message.setSubject(subject);
+        this.message.setMessage(message);
     }
 }
