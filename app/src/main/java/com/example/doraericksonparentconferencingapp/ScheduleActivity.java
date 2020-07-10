@@ -449,4 +449,10 @@ public class ScheduleActivity extends AppCompatActivity {
 
         displayInfo();
     }
+
+
+
+    public void addNewCalanderItem(View view) {
+
+    }
 }

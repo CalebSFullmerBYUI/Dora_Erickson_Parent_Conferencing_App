@@ -3,12 +3,12 @@ package com.example.doraericksonparentconferencingapp;
 import java.util.Date;
 
 public class ScheduleItem extends TextInformation {
-    private Date dueDate;
+    private long dueDate = 0l;
     private boolean isHomework;
 
     public ScheduleItem(Date dueDate, boolean isHomework){
-        dueDate = this.dueDate;
-        isHomework = this.isHomework;
+        this.dueDate = dueDate.getTime();
+        this.isHomework = isHomework;
 
     }
     public ScheduleItem (ScheduleItem scheduleItem){
@@ -16,14 +16,14 @@ public class ScheduleItem extends TextInformation {
     }
 
     public Date getDueDate() {
-        return dueDate;
+        return new Date(dueDate);
     }
     public boolean getIsHomework(){
         return isHomework;
     }
 
     public void setDueDate(Date dueDate) {
-        this.dueDate = dueDate;
+        this.dueDate = dueDate.getTime();
     }
 
     public void setHomework(boolean homework) {
