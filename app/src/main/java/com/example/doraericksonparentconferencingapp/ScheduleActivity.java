@@ -2,6 +2,7 @@ package com.example.doraericksonparentconferencingapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -35,6 +36,7 @@ public class ScheduleActivity extends AppCompatActivity {
     private ArrayList<ScheduleItem> scheduledItems = new ArrayList<ScheduleItem>();
     private TreeMap<String, ArrayList<ScheduleItem>> sortedSchedule =
             new TreeMap<String, ArrayList<ScheduleItem>>();
+    private User currentUser = null;
 
     //Patterns for date formatting and data retreival.
     private final SimpleDateFormat keyFormat = new SimpleDateFormat("yyyyw");
@@ -56,6 +58,19 @@ public class ScheduleActivity extends AppCompatActivity {
         Date currentDate = new Date();
         currentWeek = Integer.parseInt(weekInYear.format(currentDate));
         currentYear = Integer.parseInt(dateYear.format(currentDate));
+
+
+        //Get user
+        if (getIntent().getStringArrayExtra(HomePageActivity.USER_KEY) != null) {
+            currentUser = new Gson().fromJson(getIntent().getStringExtra(HomePageActivity.USER_KEY), User.class);
+        } else {
+            Log.e("ScheduleActivity.onCreate()", "Error: No known User passed in.");
+            currentUser = null;
+
+            Toast errorToast = Toast.makeText(getApplicationContext(), "User not recognized.", Toast.LENGTH_LONG);
+            errorToast.show();
+        }
+
 
         //Set up schedule.
         getScheduleInfo();
@@ -226,6 +241,7 @@ public class ScheduleActivity extends AppCompatActivity {
                         newView.setSubject(item.getSubject());
                         newView.setSentDate(sortDate);
                         newView.setMessage(item.getMessage());
+                        newView.setTag(new Gson().toJson(item));
 
                         //Determine the day of the week.
                         switch (Integer.parseInt(dayInWeek.format(sortDate))) {
@@ -453,6 +469,15 @@ public class ScheduleActivity extends AppCompatActivity {
 
 
     public void addNewCalanderItem(View view) {
+        Intent newCalenderItemIntent = new Intent(this, NewScheduleItemActivity.class);
+        if (currentUser != null) {
+            newCalenderItemIntent.putExtra(HomePageActivity.USER_KEY, new Gson().toJson(currentUser));
+        }
 
+        if ((view.getTag() != null) && (view.getTag() instanceof String) && !view.getTag().equals("")) {
+            newCalenderItemIntent.putExtra(NewScheduleItemActivity.SCHEDULE_ITEM_NAME, (String)view.getTag());
+        }
+
+        startActivity(newCalenderItemIntent);
     }
 }

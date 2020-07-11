@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ import java.util.Date;
  * @since July 9, 2020
  */
 public class NewScheduleItemActivity extends AppCompatActivity {
+    public static final String SCHEDULE_ITEM_NAME = "Schedule Item To View";
     private ScheduleItem newCalenderItem = null;
     private User currentUser = null;
 
@@ -34,25 +36,6 @@ public class NewScheduleItemActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_schedule_item);
-
-        if (getIntent().getStringArrayExtra(HomePageActivity.USER_KEY) != null) {
-            currentUser = new Gson().fromJson(getIntent().getStringExtra(HomePageActivity.USER_KEY), User.class);
-        } else {
-            Log.e("DirectoryActivity.onCreate()", "Error: No known User passed in.");
-            currentUser = null;
-
-            Toast errorToast = Toast.makeText(getApplicationContext(), "User not recognized.", Toast.LENGTH_LONG);
-            errorToast.show();
-        }
-
-        newCalenderItem = new ScheduleItem(new Date(), false);
-
-        if (currentUser != null) {
-            newCalenderItem.setSender(currentUser.getName());
-        } else {
-            newCalenderItem.setSender("");
-        }
-
 
 
         //Set spinner adapters
@@ -91,6 +74,112 @@ public class NewScheduleItemActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> amPmAdapter = ArrayAdapter.createFromResource(this, R.array.ampm_spinner_content, android.R.layout.simple_spinner_item);
         amPmAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         amPmSpinner.setAdapter(amPmAdapter);
+
+
+
+        if (getIntent().getStringArrayExtra(HomePageActivity.USER_KEY) != null) {
+            currentUser = new Gson().fromJson(getIntent().getStringExtra(HomePageActivity.USER_KEY), User.class);
+        } else {
+            Log.e("DirectoryActivity.onCreate()", "Error: No known User passed in.");
+            currentUser = null;
+
+            Toast errorToast = Toast.makeText(getApplicationContext(), "User not recognized.", Toast.LENGTH_LONG);
+            errorToast.show();
+        }
+
+
+
+
+        //Get message
+        if (getIntent().getStringExtra(SCHEDULE_ITEM_NAME) != null) {
+            try {
+                int month = 1;
+                int amPm = 0;
+
+                newCalenderItem = new Gson().fromJson(getIntent().getStringExtra(SCHEDULE_ITEM_NAME), ScheduleItem.class);
+                ((EditText)findViewById(R.id.txt_EventName)).setText(newCalenderItem.getSubject());
+                ((EditText)findViewById(R.id.txt_MulDescription)).setText(newCalenderItem.getMessage());
+
+
+                //Get month value
+                switch ((new SimpleDateFormat("LLL").format(newCalenderItem.getDate())).toLowerCase()) {
+                    case "jan":
+                        month = 1;
+                        break;
+                    case "feb":
+                        month = 2;
+                        break;
+                    case "mar":
+                        month = 3;
+                        break;
+                    case "apr":
+                        month = 4;
+                        break;
+                    case "may":
+                        month = 5;
+                        break;
+                    case "jun":
+                        month = 6;
+                        break;
+                    case "jul":
+                        month = 7;
+                        break;
+                    case "agu":
+                        month = 8;
+                        break;
+                    case "sep":
+                        month = 9;
+                        break;
+                    case "oct":
+                        month = 10;
+                        break;
+                    case "nov":
+                        month = 11;
+                        break;
+                    case "dec":
+                        month = 12;
+                        break;
+                    default:
+                        month = 0;
+                        break;
+                }
+
+
+
+                //Get am/pm value
+                if ((new SimpleDateFormat("a").format(newCalenderItem.getDate())).equals("AM")) {
+                    amPm = 0;
+                } else {
+                    amPm = 1;
+                }
+
+
+
+                ((Spinner)findViewById(R.id.spnr_Month)).setSelection(month);
+                ((Spinner)findViewById(R.id.spnr_Day)).setSelection(Integer.parseInt(
+                        new SimpleDateFormat("d").format(newCalenderItem.getDate())));
+                ((Spinner)findViewById(R.id.spnr_Year)).setSelection(Integer.parseInt(
+                        new SimpleDateFormat("yyyy").format(newCalenderItem.getDate())));
+                ((Spinner)findViewById(R.id.spnr_Hour)).setSelection(Integer.parseInt(
+                        new SimpleDateFormat("h").format(newCalenderItem.getDate())));
+                ((Spinner)findViewById(R.id.spnr_Minute)).setSelection(Integer.parseInt(
+                        new SimpleDateFormat("m").format(newCalenderItem.getDate())));
+                ((Spinner)findViewById(R.id.spnr_AmPm)).setSelection(amPm);
+            } catch (Exception e) {
+                Log.e("NewScheduleITemActivity.onCreate()", "Invalid ScheduleItem given.");
+                newCalenderItem = new ScheduleItem(new Date(), false);
+            }
+        } else {
+            newCalenderItem = new ScheduleItem(new Date(), false);
+        }
+
+
+
+        if (currentUser != null) {
+            newCalenderItem.setSender(currentUser.getName());
+        } else {
+            newCalenderItem.setSender("Unknown");
+        }
     }
 
 

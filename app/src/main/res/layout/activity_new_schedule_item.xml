@@ -109,13 +109,13 @@
         android:layout_width="0dp"
         android:layout_height="2dp"
         android:background="#8F8F8F"
-        app:layout_constraintBottom_toTopOf="@+id/txtMul_Description"
+        app:layout_constraintBottom_toTopOf="@+id/txt_MulDescription"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spnr_Hour" />
 
     <EditText
-        android:id="@+id/txtMul_Description"
+        android:id="@+id/txt_MulDescription"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:ems="10"
@@ -193,7 +193,7 @@
         android:textColor="@android:color/black"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/txtMul_Description"
+        app:layout_constraintBottom_toTopOf="@+id/txt_MulDescription"
         app:layout_constraintEnd_toStartOf="@+id/spnr_Minute"
         app:layout_constraintStart_toEndOf="@+id/spnr_Hour"
         app:layout_constraintTop_toBottomOf="@+id/divider13" />
