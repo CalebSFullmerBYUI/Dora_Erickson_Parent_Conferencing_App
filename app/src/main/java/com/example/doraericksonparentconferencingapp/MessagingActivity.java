@@ -160,12 +160,26 @@ public class MessagingActivity extends AppCompatActivity {
             newView.setSubject(item.getSubject());
             newView.setSentDate(item.getDate());
             newView.setMessage(item.getMessage());
+            newView.setTag(new Gson().toJson(item));
             newView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //Nothing for now.
+                    newMessage(v);
                 }
             });
+
+            //Set replies
+            if (item.getReplies().size() > 0) {
+                for (MessageItem reply: item.getReplies()) {
+                    AnnouncementView newReplyView = new AnnouncementView(getApplicationContext(), true);
+                    newReplyView.setSender(reply.getSender());
+                    newReplyView.setRecipient(reply.getRecipient());
+                    newReplyView.setSubject(reply.getSubject());
+                    newReplyView.setSentDate(reply.getDate());
+                    newReplyView.setMessage(reply.getMessage());
+                    newView.addReply(newReplyView);
+                }
+            }
 
             ((LinearLayout)findViewById(R.id.linLay_Messages)).addView(newView);
         }
@@ -214,16 +228,14 @@ public class MessagingActivity extends AppCompatActivity {
     public void newMessage(View view) {
         Intent newMessageIntent = new Intent(this, NewMessageActivity.class);
         newMessageIntent.putExtra(HomePageActivity.USER_KEY, new Gson().toJson(currentUser));
+
+        if ((view.getTag() != null) && (view.getTag() instanceof String) && !view.getTag().equals("")) {
+            newMessageIntent.putExtra(NewMessageActivity.MESSAGE_KEY, (String)view.getTag());
+            newMessageIntent.putExtra(NewMessageActivity.IS_REPLY_KEY, true);
+        } else {
+            newMessageIntent.putExtra(NewMessageActivity.IS_REPLY_KEY, false);
+        }
         startActivity(newMessageIntent);
-    }
-
-    /**
-     * <h3>replyToMessage(View view)</h3>
-     * Starts NewMessageActivity to reply to an existing message.
-     * @param view
-     */
-    public void replyToMessage(View view) {
-
     }
 
 

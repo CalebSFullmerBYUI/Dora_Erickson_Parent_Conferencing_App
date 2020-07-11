@@ -49,6 +49,7 @@ public class AnnouncementView extends ConstraintLayout {
     private TextView sentDate = null;
     private TextView recipient = null;
     private TextView message = null;
+    private LinearLayout replies = null;
 
     //Generate new Id's for the AnnouncementView and child Views.
     private final int senderId = generateViewId();
@@ -56,6 +57,7 @@ public class AnnouncementView extends ConstraintLayout {
     private final int sentDateId = generateViewId();
     private final int recipientId = generateViewId();
     private final int messageId = generateViewId();
+    private final int repliesId = generateViewId();
     private final int announceViewId = generateViewId();
 
     //Constructors
@@ -88,12 +90,14 @@ public class AnnouncementView extends ConstraintLayout {
         makeSubject();
         makeSentDate();
         makeMessage();
+        makeReplies();
 
         addView(recipient);
         addView(sender);
         addView(subject);
         addView(sentDate);
         addView(message);
+        addView(replies);
 
 
         //Paranoia (Ensures make functions correctly assigned Id's)
@@ -134,12 +138,32 @@ public class AnnouncementView extends ConstraintLayout {
 
         //Constraints for message
         newConstraints.connect(messageId, ConstraintSet.TOP, sentDateId, ConstraintSet.BOTTOM);
-        newConstraints.connect(messageId, ConstraintSet.BOTTOM, announceViewId, ConstraintSet.BOTTOM);
+        newConstraints.connect(messageId, ConstraintSet.BOTTOM, repliesId, ConstraintSet.TOP);
+        newConstraints.connect(messageId, ConstraintSet.START, announceViewId, ConstraintSet.START);
+        newConstraints.connect(messageId, ConstraintSet.END, announceViewId, ConstraintSet.END);
+
+        //Constraints for replies
+        newConstraints.connect(messageId, ConstraintSet.TOP, messageId, ConstraintSet.BOTTOM);
+        newConstraints.connect(messageId, ConstraintSet.BOTTOM, announceViewId, ConstraintSet.TOP);
         newConstraints.connect(messageId, ConstraintSet.START, announceViewId, ConstraintSet.START);
         newConstraints.connect(messageId, ConstraintSet.END, announceViewId, ConstraintSet.END);
 
         //Add constraints to layout.
         newConstraints.applyTo(this);
+    }
+
+    /**
+     * <h3>makeReplies()</h3>
+     * Creates the replies linear layout and defines its attributes.
+     */
+    private void makeReplies() {
+        replies = new LinearLayout(getContext());
+        replies.setId(repliesId);
+        replies.setOrientation(LinearLayout.VERTICAL);
+
+        ConstraintLayout.LayoutParams newLayout = new Constraints.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        newLayout.setMargins(15, 10, 0, 0);
+        replies.setLayoutParams(newLayout);
     }
 
     /**
@@ -382,6 +406,17 @@ public class AnnouncementView extends ConstraintLayout {
             this.message.setText(message);
         } else {
             this.message.setText("");
+        }
+    }
+
+
+    public void addReply (AnnouncementView newReply) {
+        if (replies == null) {
+            makeAnnouncementView();
+        }
+
+        if (newReply != null) {
+            replies.addView(newReply);
         }
     }
 }

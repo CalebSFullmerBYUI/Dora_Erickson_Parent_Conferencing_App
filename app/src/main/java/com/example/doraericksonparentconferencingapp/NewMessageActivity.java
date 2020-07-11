@@ -5,14 +5,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
 public class NewMessageActivity extends AppCompatActivity {
+    public static final String IS_REPLY_KEY = "Is_Reply Key";
+    public static final String MESSAGE_KEY = "Message key";
     private MessageItem message = null;
+    private MessageItem parentMessageItem = null;
     private User currentUser = null;
+    private boolean isReply = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +34,35 @@ public class NewMessageActivity extends AppCompatActivity {
             errorToast.show();
         }
 
+
         message = new MessageItem();
+
+
+
+        //Check for if it is a new message or a reply.
+        if (getIntent().getBooleanExtra(IS_REPLY_KEY, false)) {
+            isReply = true;
+
+            try {
+                if (getIntent().getStringExtra(MESSAGE_KEY) != null) {
+                    parentMessageItem = new Gson().fromJson(getIntent().getStringExtra(MESSAGE_KEY), MessageItem.class);
+                    message.setRecipient(parentMessageItem.getSender());
+                    ((EditText)findViewById(R.id.txt_Recipient)).setText(message.getRecipient());
+                } else {
+                    throw new Exception("Intent marked as a reply, but no base MessageItem given.");
+                }
+            } catch (Exception e) {
+                Log.e("NewMessageActivity.onCreate()", e.getMessage());
+                Toast errorToast = Toast.makeText(getApplicationContext(), "Issue Replying", Toast.LENGTH_LONG);
+                errorToast.show();
+                finish();
+            }
+        } else {
+            parentMessageItem = null;
+        }
+
+
+
 
         if (currentUser != null) {
             message.setSender(currentUser.getName());
@@ -47,6 +80,13 @@ public class NewMessageActivity extends AppCompatActivity {
     public void send(View view) {
         getMessageData();
         final MessageItem constMessage = message;
+        String variableKeys = "?";
+
+        if (isReply && (parentMessageItem != null)) {
+            //Set appropreate variable keys.
+        } else {
+            //Set appropreate variable keys.
+        }
 
         //Notify server that draft should be saved.
         if ((message.getSender() != null) && !message.getSender().equals("")) {
@@ -99,6 +139,13 @@ public class NewMessageActivity extends AppCompatActivity {
     public void delete(View view) {
         //Send message to server that this draft can be deleted.
         final MessageItem constMessage = message;
+        String variableKeys = "?";
+
+        if (isReply && (parentMessageItem != null)) {
+            //Set appropreate variable keys.
+        } else {
+            //Set appropreate variable keys.
+        }
 
         //Notify server that message can be deleted.
         Thread messageCanBeDeletedThread = new Thread(new Runnable() {
