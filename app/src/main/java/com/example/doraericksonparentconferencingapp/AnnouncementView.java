@@ -143,10 +143,10 @@ public class AnnouncementView extends ConstraintLayout {
         newConstraints.connect(messageId, ConstraintSet.END, announceViewId, ConstraintSet.END);
 
         //Constraints for replies
-        newConstraints.connect(messageId, ConstraintSet.TOP, messageId, ConstraintSet.BOTTOM);
-        newConstraints.connect(messageId, ConstraintSet.BOTTOM, announceViewId, ConstraintSet.TOP);
-        newConstraints.connect(messageId, ConstraintSet.START, announceViewId, ConstraintSet.START);
-        newConstraints.connect(messageId, ConstraintSet.END, announceViewId, ConstraintSet.END);
+        newConstraints.connect(repliesId, ConstraintSet.TOP, messageId, ConstraintSet.BOTTOM);
+        newConstraints.connect(repliesId, ConstraintSet.BOTTOM, announceViewId, ConstraintSet.BOTTOM);
+        newConstraints.connect(repliesId, ConstraintSet.START, announceViewId, ConstraintSet.START);
+        newConstraints.connect(repliesId, ConstraintSet.END, announceViewId, ConstraintSet.END);
 
         //Add constraints to layout.
         newConstraints.applyTo(this);
@@ -227,7 +227,7 @@ public class AnnouncementView extends ConstraintLayout {
     private void makeRecipient() {
         recipient = new TextView(getContext());
         //Set up appropreate textview fields.
-        recipient.setText("Recipient:");
+        recipient.setText("To:");
         recipient.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         recipient.setId(recipientId);
 
@@ -245,7 +245,7 @@ public class AnnouncementView extends ConstraintLayout {
     private void makeMessage() {
         message = new TextView(getContext());
         //Set up appropreate textview fields.
-        message.setText("From:");
+        message.setText("");
         message.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         message.setId(messageId);
 
@@ -270,7 +270,7 @@ public class AnnouncementView extends ConstraintLayout {
     public String getSender() {
         if (sender == null) {
             makeAnnouncementView();
-            sender.setText("");
+            sender.setText("From:");
         }
         return (String)sender.getText();
     }
@@ -286,9 +286,9 @@ public class AnnouncementView extends ConstraintLayout {
         }
 
         if (sender != null) {
-            this.sender.setText(sender);
+            this.sender.setText("From: " + sender);
         } else {
-            this.sender.setText("");
+            this.sender.setText("From:");
         }
     }
 
@@ -300,7 +300,7 @@ public class AnnouncementView extends ConstraintLayout {
     public String getSubject() {
         if (subject == null) {
             makeAnnouncementView();
-            subject.setText("");
+            subject.setText("Subject:");
         }
         return (String)subject.getText();
     }
@@ -316,9 +316,9 @@ public class AnnouncementView extends ConstraintLayout {
         }
 
         if (subject != null) {
-            this.sender.setText(subject);
+            this.subject.setText("Subject: " + subject);
         } else {
-            this.sender.setText("");
+            this.subject.setText("Subject:");
         }
     }
 
@@ -343,9 +343,9 @@ public class AnnouncementView extends ConstraintLayout {
         }
 
         if (date != null) {
-            this.sentDate.setText(HomePageActivity.DATE_FORMAT.format(date));
+            this.sentDate.setText("Date: " + HomePageActivity.DATE_FORMAT.format(date));
         } else {
-            this.sentDate.setText("");
+            this.sentDate.setText("Date:");
         }
     }
 
@@ -357,7 +357,7 @@ public class AnnouncementView extends ConstraintLayout {
     public String getRecipient() {
         if (recipient == null) {
             makeAnnouncementView();
-            recipient.setText("");
+            recipient.setText("To:");
         }
         return (String)recipient.getText();
     }
@@ -373,9 +373,9 @@ public class AnnouncementView extends ConstraintLayout {
         }
 
         if (recipient != null) {
-            this.recipient.setText(recipient);
+            this.recipient.setText("To: " + recipient);
         } else {
-            this.recipient.setText("");
+            this.recipient.setText("To:");
         }
     }
 
