@@ -39,7 +39,7 @@ public class ScheduleActivity extends AppCompatActivity {
     private User currentUser = null;
 
     //Patterns for date formatting and data retreival.
-    private final SimpleDateFormat keyFormat = new SimpleDateFormat("yyyyw");
+    private final SimpleDateFormat keyFormat = new SimpleDateFormat("yyyy w");
     private final SimpleDateFormat dateYear = new SimpleDateFormat("yyyy");
     private final SimpleDateFormat weekInYear = new SimpleDateFormat("w");
     private final SimpleDateFormat dayInWeek = new SimpleDateFormat("u");
@@ -168,37 +168,37 @@ public class ScheduleActivity extends AppCompatActivity {
         String label = "";
         Date dateLabel = null;
         TextView txtV_DateLabel = ((TextView)findViewById(R.id.txtV_DateLabel));
-        final SimpleDateFormat parsingFormat = new SimpleDateFormat("yyyywu");
+        final SimpleDateFormat parsingFormat = new SimpleDateFormat("yyyy w u");
         final SimpleDateFormat formattingFormat = new SimpleDateFormat("MMM/d/yy");
 
         try {
             //Sunday
-            dateLabel = parsingFormat.parse( currentYear + currentWeek + "7");
+            dateLabel = parsingFormat.parse( Integer.toString(currentYear) + " " + Integer.toString(currentWeek) + " 7");
             ((TextView)findViewById(R.id.txtV_Sunday)).setText("Sunday " + formattingFormat.format(dateLabel));
             label += (formattingFormat.format(dateLabel) + " - ");
 
             //Monday
-            dateLabel = parsingFormat.parse(currentYear + currentWeek + "1");
+            dateLabel = parsingFormat.parse(Integer.toString(currentYear) + " " + Integer.toString(currentWeek) + " 1");
             ((TextView)findViewById(R.id.txtV_Monday)).setText("Monday " + formattingFormat.format(dateLabel));
 
             //Tuesday
-            dateLabel = parsingFormat.parse(currentYear + currentWeek + "2");
+            dateLabel = parsingFormat.parse(Integer.toString(currentYear) + " " + Integer.toString(currentWeek) + " 2");
             ((TextView)findViewById(R.id.txtV_Tuesday)).setText("Tuesday " + formattingFormat.format(dateLabel));
 
             //Wednesday
-            dateLabel = parsingFormat.parse(currentYear + currentWeek + "3");
+            dateLabel = parsingFormat.parse(Integer.toString(currentYear) + " " + Integer.toString(currentWeek) + " 3");
             ((TextView)findViewById(R.id.txtV_Wednesday)).setText("Wednesday " + formattingFormat.format(dateLabel));
 
             //Thursday
-            dateLabel = parsingFormat.parse(currentYear + currentWeek + "4");
+            dateLabel = parsingFormat.parse(Integer.toString(currentYear) + " " + Integer.toString(currentWeek) + " 4");
             ((TextView)findViewById(R.id.txtV_Thursday)).setText("Thursday " + formattingFormat.format(dateLabel));
 
             //Friday
-            dateLabel = parsingFormat.parse(currentYear + currentWeek + "5");
+            dateLabel = parsingFormat.parse(Integer.toString(currentYear) + " " + Integer.toString(currentWeek) + " 5");
             ((TextView)findViewById(R.id.txtV_Friday)).setText("Friday " + formattingFormat.format(dateLabel));
 
             //Saturday
-            dateLabel = parsingFormat.parse(currentYear + currentWeek + "6");
+            dateLabel = parsingFormat.parse(Integer.toString(currentYear) + " " + Integer.toString(currentWeek) + " 6");
             ((TextView)findViewById(R.id.txtV_Saturday)).setText("Saturday " + formattingFormat.format(dateLabel));
             label += formattingFormat.format(dateLabel);
 
@@ -319,7 +319,7 @@ public class ScheduleActivity extends AppCompatActivity {
                 } else {
                     ArrayList<ScheduleItem> newList = new ArrayList<ScheduleItem>();
                     newList.add(item);
-                    newSortedSchedule.put(keyFormat.format(sortingKey), newList);
+                    newSortedSchedule.put(sortingKey, newList);
                 }
             }
         }
@@ -419,7 +419,7 @@ public class ScheduleActivity extends AppCompatActivity {
             Date newDate = null;
 
             try {
-                newDate = new SimpleDateFormat("yyyyw").parse(currentYear + "53");
+                newDate = new SimpleDateFormat("yyyy w").parse(currentYear + " 53");
 
                 if ((Integer.parseInt(dayInMonth.format(newDate)) > 25) ||
                         (currentWeek > 54)) {
@@ -448,7 +448,7 @@ public class ScheduleActivity extends AppCompatActivity {
             Date newDate = null;
 
             try {
-                newDate = new SimpleDateFormat("yyyyw").parse(currentYear + "1");
+                newDate = new SimpleDateFormat("yyyy w").parse(currentYear + " 1");
 
                 if (Integer.parseInt(dayInMonth.format(newDate)) == 1) {
                     currentWeek = 53;

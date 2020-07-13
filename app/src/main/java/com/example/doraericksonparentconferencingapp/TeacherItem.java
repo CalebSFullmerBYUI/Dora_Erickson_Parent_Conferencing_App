@@ -1,11 +1,11 @@
 package com.example.doraericksonparentconferencingapp;
 
 public class TeacherItem {
-    public String name;
-    public String className;
-    public int classId;
-    public String email;
-    public long phoneNum;
+    private String name;
+    private String className;
+    private int classId;
+    private String email;
+    private long phoneNum;
 
     public TeacherItem(String name, String className, int classId){
         this.classId = classId;
