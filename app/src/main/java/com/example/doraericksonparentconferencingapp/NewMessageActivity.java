@@ -89,35 +89,35 @@ public class NewMessageActivity extends AppCompatActivity {
         }
 
         //Notify server that draft should be saved.
-        if ((message.getSender() != null) && !message.getSender().equals("")) {
+        if ((message.getRecipient() != null) && !message.getRecipient().equals("")) {
             Thread sendThread = new Thread(new CustomRun(this) {
                 @Override
                 public void run() {
                     //Send message
-                    String serverSendResponse = new ServerRequest().request("", ""/*"?keyName=" + new Gson().toJson(constMessage)*/);
+                    final String serverSendResponse = new ServerRequest().request("", ""/*"?keyName=" + new Gson().toJson(constMessage)*/);
                     //Delete draft from user draft page.
                     String serverDeleteResponse = new ServerRequest().request("", ""/*"?keyName=" + new Gson().toJson(constMessage)*/);
-                    final String toastOutput;
 
                     if ((serverDeleteResponse == null) || serverDeleteResponse.equals("")) {
                         Log.e("NewMessageActivity.Send()", "Error deleting file from server.");
-                    }
-
-                    //Determine status of save.
-                    if ((serverSendResponse == null) || serverSendResponse.equals("")) {
-                        Log.e("NewMessageActivity.Send()", "Error sending message.");
-                        toastOutput = "Error sending message.";
-                    } else {
-                        toastOutput = "Message Sent";
                     }
 
                     //Report save status to user.
                     currentActivity.get().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast statusToast = Toast.makeText(currentActivity.get().getApplicationContext(),
-                                    toastOutput, Toast.LENGTH_LONG);
-                            statusToast.show();
+                            //Determine status of save.
+                            if ((serverSendResponse == null) || serverSendResponse.equals("")) {
+                                Log.e("NewMessageActivity.Send()", "Error sending message.");
+                                Toast statusToast = Toast.makeText(currentActivity.get().getApplicationContext(),
+                                        "Error sending message.", Toast.LENGTH_LONG);
+                                statusToast.show();
+                            } else {
+                                Toast statusToast = Toast.makeText(currentActivity.get().getApplicationContext(),
+                                        "Message Sent", Toast.LENGTH_LONG);
+                                statusToast.show();
+                                finish();
+                            }
                         }
                     });
                 }
