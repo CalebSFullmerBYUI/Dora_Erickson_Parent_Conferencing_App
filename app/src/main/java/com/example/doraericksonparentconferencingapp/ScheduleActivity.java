@@ -28,8 +28,8 @@ import java.text.SimpleDateFormat;
  * <h3>ScheduleActivity Activity</h3>
  * Displays the user's schedule in a weekly schedule format.
  * @author Caleb Fullmer
- * @since June 17, 2020
- * @version 1.1
+ * @since July 13, 2020
+ * @version 1.2
  */
 public class ScheduleActivity extends AppCompatActivity {
     //Uncomment this once ScheduleItem exists.
@@ -242,6 +242,12 @@ public class ScheduleActivity extends AppCompatActivity {
                         newView.setSentDate(sortDate);
                         newView.setMessage(item.getMessage());
                         newView.setTag(new Gson().toJson(item));
+                        newView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                addNewCalanderItem(v);
+                            }
+                        });
 
                         //Determine the day of the week.
                         switch (Integer.parseInt(dayInWeek.format(sortDate))) {

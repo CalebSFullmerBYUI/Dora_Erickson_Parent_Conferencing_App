@@ -89,20 +89,32 @@ public class NewScheduleItemActivity extends AppCompatActivity {
 
 
 
+        newCalenderItem = new ScheduleItem(new Date(), false);
+
 
         //Get message
-        if (getIntent().getStringExtra(SCHEDULE_ITEM_NAME) != null) {
+        if ((getIntent().getStringExtra(SCHEDULE_ITEM_NAME) != null) && !getIntent().getStringExtra(SCHEDULE_ITEM_NAME).equals("")) {
             try {
                 int month = 1;
+                int year = 0;
                 int amPm = 0;
+                Date messageDate = new Date();
 
                 newCalenderItem = new Gson().fromJson(getIntent().getStringExtra(SCHEDULE_ITEM_NAME), ScheduleItem.class);
                 ((EditText)findViewById(R.id.txt_EventName)).setText(newCalenderItem.getSubject());
                 ((EditText)findViewById(R.id.txt_MulDescription)).setText(newCalenderItem.getMessage());
 
+                if (newCalenderItem.getIsHomework()) {
+                    messageDate = newCalenderItem.getDueDate();
+                } else {
+                    messageDate = newCalenderItem.getDate();
+                }
+
+
+                String test = (new SimpleDateFormat("LLL").format(messageDate)).toLowerCase();
 
                 //Get month value
-                switch ((new SimpleDateFormat("LLL").format(newCalenderItem.getDate())).toLowerCase()) {
+                switch ((new SimpleDateFormat("LLL").format(messageDate)).toLowerCase()) {
                     case "jan":
                         month = 1;
                         break;
@@ -124,7 +136,7 @@ public class NewScheduleItemActivity extends AppCompatActivity {
                     case "jul":
                         month = 7;
                         break;
-                    case "agu":
+                    case "aug":
                         month = 8;
                         break;
                     case "sep":
@@ -146,8 +158,44 @@ public class NewScheduleItemActivity extends AppCompatActivity {
 
 
 
+                //Get year value
+                switch(new SimpleDateFormat("yyyy").format(messageDate)) {
+                    case "2017":
+                        year = 1;
+                        break;
+                    case "2018":
+                        year = 2;
+                        break;
+                    case "2019":
+                        year = 3;
+                        break;
+                    case "2020":
+                        year = 4;
+                        break;
+                    case "2021":
+                        year = 5;
+                        break;
+                    case "2022":
+                        year = 6;
+                        break;
+                    case "2023":
+                        year = 7;
+                        break;
+                    case "2024":
+                        year = 8;
+                        break;
+                    case "2025":
+                        year = 9;
+                        break;
+                    default:
+                        year = 0;
+                        break;
+                }
+
+
+
                 //Get am/pm value
-                if ((new SimpleDateFormat("a").format(newCalenderItem.getDate())).equals("AM")) {
+                if ((new SimpleDateFormat("a").format(messageDate)).equals("AM")) {
                     amPm = 0;
                 } else {
                     amPm = 1;
@@ -157,20 +205,17 @@ public class NewScheduleItemActivity extends AppCompatActivity {
 
                 ((Spinner)findViewById(R.id.spnr_Month)).setSelection(month);
                 ((Spinner)findViewById(R.id.spnr_Day)).setSelection(Integer.parseInt(
-                        new SimpleDateFormat("d").format(newCalenderItem.getDate())));
-                ((Spinner)findViewById(R.id.spnr_Year)).setSelection(Integer.parseInt(
-                        new SimpleDateFormat("yyyy").format(newCalenderItem.getDate())));
+                        new SimpleDateFormat("d").format(messageDate)));
+                ((Spinner)findViewById(R.id.spnr_Year)).setSelection(year);
                 ((Spinner)findViewById(R.id.spnr_Hour)).setSelection(Integer.parseInt(
-                        new SimpleDateFormat("h").format(newCalenderItem.getDate())));
+                        new SimpleDateFormat("h").format(messageDate)));
                 ((Spinner)findViewById(R.id.spnr_Minute)).setSelection(Integer.parseInt(
-                        new SimpleDateFormat("m").format(newCalenderItem.getDate())));
+                        new SimpleDateFormat("m").format(messageDate)));
                 ((Spinner)findViewById(R.id.spnr_AmPm)).setSelection(amPm);
             } catch (Exception e) {
                 Log.e("NewScheduleITemActivity.onCreate()", "Invalid ScheduleItem given.");
                 newCalenderItem = new ScheduleItem(new Date(), false);
             }
-        } else {
-            newCalenderItem = new ScheduleItem(new Date(), false);
         }
 
 

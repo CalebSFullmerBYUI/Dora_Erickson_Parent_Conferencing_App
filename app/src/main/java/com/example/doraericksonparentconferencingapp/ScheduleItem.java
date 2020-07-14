@@ -16,7 +16,7 @@ public class ScheduleItem extends TextInformation {
     }
 
     public Date getDueDate() {
-        return new Date(dueDate);
+        return new Date(dueDate * 1000);
     }
     public boolean getIsHomework(){
         return isHomework;
