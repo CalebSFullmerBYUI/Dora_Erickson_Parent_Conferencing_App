@@ -215,8 +215,8 @@ public class NewScheduleItemActivity extends AppCompatActivity {
                 ((Spinner)findViewById(R.id.spnr_Year)).setSelection(year);
                 ((Spinner)findViewById(R.id.spnr_Hour)).setSelection(Integer.parseInt(
                         new SimpleDateFormat("h").format(messageDate)));
-                ((Spinner)findViewById(R.id.spnr_Minute)).setSelection(Integer.parseInt(
-                        new SimpleDateFormat("m").format(messageDate)));
+                ((Spinner)findViewById(R.id.spnr_Minute)).setSelection((Integer.parseInt(
+                        new SimpleDateFormat("m").format(messageDate))) + 1);
                 ((Spinner)findViewById(R.id.spnr_AmPm)).setSelection(amPm);
             } catch (Exception e) {
                 Log.e("NewScheduleITemActivity.onCreate()", "Invalid ScheduleItem given.");
