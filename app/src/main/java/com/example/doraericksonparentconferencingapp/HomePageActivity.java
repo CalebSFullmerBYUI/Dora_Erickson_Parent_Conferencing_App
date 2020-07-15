@@ -12,6 +12,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -68,6 +69,10 @@ public class HomePageActivity extends AppCompatActivity {
 
                                 //This is for testing admin and teacher accounts.
                                 //currentUser.setIsAdmin(true);
+
+                                if (!currentUser.isAdmin()) {
+                                    ((Button)findViewById(R.id.btn_Classroom)).setVisibility(View.GONE);
+                                }
 
                                 refreshAnnouncements();
                             } else {
