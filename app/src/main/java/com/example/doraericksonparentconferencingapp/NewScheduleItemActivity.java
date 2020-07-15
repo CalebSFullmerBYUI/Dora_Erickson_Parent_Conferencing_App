@@ -29,8 +29,10 @@ import java.util.Date;
  */
 public class NewScheduleItemActivity extends AppCompatActivity {
     public static final String SCHEDULE_ITEM_NAME = "Schedule Item To View";
+    public static final String IS_TEACHER_ANNOUNCE_KEY = "is teacher Announce_KEY";
     private ScheduleItem newCalenderItem = null;
     private User currentUser = null;
+    private boolean isTeacherAnnouncement = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +88,10 @@ public class NewScheduleItemActivity extends AppCompatActivity {
             Toast errorToast = Toast.makeText(getApplicationContext(), "User not recognized.", Toast.LENGTH_LONG);
             errorToast.show();
         }
+
+
+        //Check if this is a teacher announcement
+        isTeacherAnnouncement = getIntent().getBooleanExtra(IS_TEACHER_ANNOUNCE_KEY, false);
 
 
 
@@ -233,11 +239,21 @@ public class NewScheduleItemActivity extends AppCompatActivity {
         final ScheduleItem constCalenderItem = newCalenderItem;
 
         if ((constCalenderItem.getSubject() != null) && !constCalenderItem.getSubject().equals("")) {
+            final boolean isTeacherAnnounce = isTeacherAnnouncement;
             Thread saveCalenderItemThread = new Thread(new CustomRun(this) {
                 @Override
                 public void run() {
-                    final String jsonResponse = new ServerRequest().request("", ""
-                            /*"?varName=" + new Gson().toJson(constCalenderItem)*/);
+                    final String jsonResponse;
+
+                    if (!isTeacherAnnounce) {
+                        //This is for a personal calender item.
+                        jsonResponse = new ServerRequest().request("", ""
+                                /*"?varName=" + new Gson().toJson(constCalenderItem)*/);
+                    } else {
+                        //This is for teacher announcements/homework. Will send to subscribed parents.
+                        jsonResponse = new ServerRequest().request("", ""
+                                /*"?varName=" + new Gson().toJson(constCalenderItem)*/);
+                    }
 
                     currentActivity.get().runOnUiThread(new Runnable() {
                         @Override

@@ -202,6 +202,7 @@ public class HomePageActivity extends AppCompatActivity {
     public void startClassroomsActivity(View view) {
         Intent newClassroom = new Intent(this, ClassroomActivity.class);
         newClassroom.putExtra(USER_KEY, new Gson().toJson(currentUser));
+        newClassroom.putExtra(ClassroomActivity.CLASSROOM_ID_KEY, currentUser.getClassId());
         startActivity(newClassroom);
     }
 

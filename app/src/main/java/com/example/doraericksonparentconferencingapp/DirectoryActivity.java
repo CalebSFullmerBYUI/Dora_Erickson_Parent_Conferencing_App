@@ -301,6 +301,7 @@ public class DirectoryActivity extends AppCompatActivity {
 
             //Add data to intent.
             newClassroom.putExtra(HomePageActivity.USER_KEY, new Gson().toJson(currentUser));
+            newClassroom.putExtra(ClassroomActivity.CLASSROOM_ID_KEY, classId);
 
             startActivity(newClassroom);
         } else {
