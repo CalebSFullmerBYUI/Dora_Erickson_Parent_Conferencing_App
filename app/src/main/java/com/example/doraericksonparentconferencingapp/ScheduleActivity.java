@@ -101,11 +101,11 @@ public class ScheduleActivity extends AppCompatActivity {
                             "{'sender': 'admin1', 'subject': 'Welcome Back Event', 'message': " +
                             "'The school will be hosting a welcome back event for the start of the " +
                             "school year on September 4th.', " +
-                            "'sentDate': 1598652343, 'dueDate': 1599689143, 'isHomework': true}," +
+                            "'sentDate': 1598652343, 'dueDate': 1599264030, 'isHomework': true}," +
 
                             "{'sender': 'admin3', 'subject': 'PTO Meeting on August 24', 'message': " +
                             "'We will be having a PTO meeting on August 24th to discuss the upcoming school year.', " +
-                            "'sentDate': 1598652343, 'dueDate': 1598306743, 'isHomework': true}," +
+                            "'sentDate': 1598052343, 'dueDate': 1598306743, 'isHomework': true}," +
 
                             "{'sender': 'admin1', 'subject': 'Gradebook Changes', 'message': " +
                             "'Starting September 4th, there will be changes to the Gradebook app. Check PowerSchool for more details.', " +
