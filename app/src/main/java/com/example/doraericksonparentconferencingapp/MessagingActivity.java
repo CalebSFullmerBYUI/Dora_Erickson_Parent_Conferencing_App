@@ -27,8 +27,9 @@ public class MessagingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messaging);
 
-        if (getIntent().getStringArrayExtra(HomePageActivity.USER_KEY) != null) {
+        if (getIntent().getStringExtra(HomePageActivity.USER_KEY) != null) {
             currentUser = new Gson().fromJson(getIntent().getStringExtra(HomePageActivity.USER_KEY), User.class);
+            getMessages();
         } else {
             Log.e("DirectoryActivity.onCreate()", "Error: No known User passed in.");
             currentUser = new User("John Doe", false);
@@ -54,7 +55,7 @@ public class MessagingActivity extends AppCompatActivity {
                 String draftsJSON = new ServerRequest().request("","");
 
                 if ((messagesJSON != null) && !messagesJSON.equals("")) {
-                    String mockResponse = "";
+                    String mockResponse = MockResponses.GetMessages();
                     newMessages = new Gson().fromJson(mockResponse/*messagesJSON*/,
                             MessageItemVector.class).getVector();
                     newUnreadMessages = getUnreadMessages(newMessages);
@@ -64,7 +65,7 @@ public class MessagingActivity extends AppCompatActivity {
                 }
 
                 if ((draftsJSON != null) && !draftsJSON.equals("")) {
-                    String mockResponse = "";
+                    String mockResponse = MockResponses.GetDrafts();
                     newDraftMessages = new Gson().fromJson(mockResponse/*draftsJSON*/,
                             MessageItemVector.class).getVector();
                 } else {
@@ -153,35 +154,47 @@ public class MessagingActivity extends AppCompatActivity {
 
 
         for (MessageItem item: listToDisplay) {
-            //Sets messages and adds them to the LinearLayout.
-            AnnouncementView newView = new AnnouncementView(getApplicationContext(), true);
-            newView.setSender(item.getSender());
-            newView.setRecipient(item.getRecipient());
-            newView.setSubject(item.getSubject());
-            newView.setSentDate(item.getDate());
-            newView.setMessage(item.getMessage());
-            newView.setTag(new Gson().toJson(item));
-            newView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    newMessage(v);
-                }
-            });
+            if (item != null) {
+                //Sets messages and adds them to the LinearLayout.
+                AnnouncementView newView = new AnnouncementView(getApplicationContext(), true);
+                newView.setSender(item.getSender());
+                newView.setRecipient(item.getRecipient());
+                newView.setSubject(item.getSubject());
+                newView.setSentDate(item.getDate());
+                newView.setMessage(item.getMessage());
+                newView.setTag(new Gson().toJson(item));
 
-            //Set replies
-            if (item.getReplies().size() > 0) {
-                for (MessageItem reply: item.getReplies()) {
-                    AnnouncementView newReplyView = new AnnouncementView(getApplicationContext(), true);
-                    newReplyView.setSender(reply.getSender());
-                    newReplyView.setRecipient(reply.getRecipient());
-                    newReplyView.setSubject(reply.getSubject());
-                    newReplyView.setSentDate(reply.getDate());
-                    newReplyView.setMessage(reply.getMessage());
-                    newView.addReply(newReplyView);
+                if (listToDisplay == draftMessages) {
+                    newView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            newMessage(v);
+                        }
+                    });
+                } else {
+                    newView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            newReply(v);
+                        }
+                    });
                 }
+
+                //Set replies
+                if (item.getReplies().size() > 0) {
+                    for (MessageItem reply : item.getReplies()) {
+                        AnnouncementView newReplyView = new AnnouncementView(getApplicationContext(), true);
+                        newReplyView.setSender(reply.getSender());
+                        newReplyView.setRecipient(reply.getRecipient());
+                        newReplyView.setSubject(reply.getSubject());
+                        newReplyView.setSentDate(reply.getDate());
+                        newReplyView.setMessage(reply.getMessage());
+                        newView.addReply(newReplyView);
+                    }
+                }
+
+                ((LinearLayout) findViewById(R.id.linLay_Messages)).addView(newView);
             }
-
-            ((LinearLayout)findViewById(R.id.linLay_Messages)).addView(newView);
         }
     }
 
@@ -200,7 +213,7 @@ public class MessagingActivity extends AppCompatActivity {
         }
 
         for (MessageItem item: allMessages) {
-            if (item.getIsRead()) {
+            if (!item.getIsRead()) {
                 unreadItems.add(item);
             }
         }
@@ -231,10 +244,27 @@ public class MessagingActivity extends AppCompatActivity {
 
         if ((view.getTag() != null) && (view.getTag() instanceof String) && !view.getTag().equals("")) {
             newMessageIntent.putExtra(NewMessageActivity.MESSAGE_KEY, (String)view.getTag());
-            newMessageIntent.putExtra(NewMessageActivity.IS_REPLY_KEY, true);
-        } else {
-            newMessageIntent.putExtra(NewMessageActivity.IS_REPLY_KEY, false);
         }
+        newMessageIntent.putExtra(NewMessageActivity.IS_REPLY_KEY, false);
+
+        startActivity(newMessageIntent);
+    }
+
+
+    /**
+     * <h3>newReply(View view)</h3>
+     * Basically the same as newMessage, but will read as a reply.
+     * @param view (Type: View, the View which called the method)
+     */
+    public void newReply(View view) {
+        Intent newMessageIntent = new Intent(this, NewMessageActivity.class);
+        newMessageIntent.putExtra(HomePageActivity.USER_KEY, new Gson().toJson(currentUser));
+
+        if ((view.getTag() != null) && (view.getTag() instanceof String) && !view.getTag().equals("")) {
+            newMessageIntent.putExtra(NewMessageActivity.MESSAGE_KEY, (String)view.getTag());
+        }
+        newMessageIntent.putExtra(NewMessageActivity.IS_REPLY_KEY, true);
+
         startActivity(newMessageIntent);
     }
 
@@ -249,7 +279,7 @@ public class MessagingActivity extends AppCompatActivity {
      * Will display all messages.
      * @param view (Type: View, the View that called the function)
      */
-    private void viewAllMessages(View view) {
+    public void viewAllMessages(View view) {
         unreadOnly = false;
         onDrafts = false;
 
@@ -261,7 +291,7 @@ public class MessagingActivity extends AppCompatActivity {
      * Will display only messages that have not been read.
      * @param view (Type: View, the View that called the function)
      */
-    private void viewUnreadMessages(View view) {
+    public void viewUnreadMessages(View view) {
         unreadOnly = true;
         onDrafts = false;
 
@@ -273,7 +303,7 @@ public class MessagingActivity extends AppCompatActivity {
      * Will display the user's saved drafts.
      * @param view (Type: View, the View that called the function)
      */
-    private void viewDrafts(View view) {
+    public void viewDrafts(View view) {
         unreadOnly = false;
         onDrafts = true;
 

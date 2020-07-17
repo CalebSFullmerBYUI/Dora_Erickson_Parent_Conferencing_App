@@ -24,7 +24,7 @@ public class NewMessageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_message);
 
-        if (getIntent().getStringArrayExtra(HomePageActivity.USER_KEY) != null) {
+        if (getIntent().getStringExtra(HomePageActivity.USER_KEY) != null) {
             currentUser = new Gson().fromJson(getIntent().getStringExtra(HomePageActivity.USER_KEY), User.class);
         } else {
             Log.e("DirectoryActivity.onCreate()", "Error: No known User passed in.");
@@ -40,14 +40,34 @@ public class NewMessageActivity extends AppCompatActivity {
 
 
         //Check for if it is a new message or a reply.
-        if (getIntent().getBooleanExtra(IS_REPLY_KEY, false)) {
-            isReply = true;
+        if (getIntent().getStringExtra(MESSAGE_KEY) != null) {
+            isReply = getIntent().getBooleanExtra(IS_REPLY_KEY, false);
 
             try {
                 if (getIntent().getStringExtra(MESSAGE_KEY) != null) {
                     parentMessageItem = new Gson().fromJson(getIntent().getStringExtra(MESSAGE_KEY), MessageItem.class);
-                    message.setRecipient(parentMessageItem.getSender());
+
+                    if (isReply) {
+                        if (!parentMessageItem.getSender().equals("Me") && !parentMessageItem.getSender().equals(currentUser.getName())) {
+                            message.setRecipient(parentMessageItem.getSender());
+                            message.setSender(parentMessageItem.getRecipient());
+                        } else {
+                            message.setRecipient(parentMessageItem.getRecipient());
+                            message.setSender(parentMessageItem.getSender());
+                        }
+                        
+                        message.setSubject(parentMessageItem.getSubject());
+                        if (currentUser != null) {
+                            message.setSender(currentUser.getName());
+                        }
+                    } else {
+                        message = parentMessageItem;
+                        parentMessageItem = null;
+                    }
+
                     ((EditText)findViewById(R.id.txt_Recipient)).setText(message.getRecipient());
+                    ((EditText)findViewById(R.id.txt_Subject)).setText(message.getSubject());
+                    ((EditText)findViewById(R.id.txt_MessageContent)).setText(message.getMessage());
                 } else {
                     throw new Exception("Intent marked as a reply, but no base MessageItem given.");
                 }
