@@ -28,7 +28,7 @@ public class ClassroomActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_classroom);
 
-        if (getIntent().getStringArrayExtra(HomePageActivity.USER_KEY) != null) {
+        if (getIntent().getStringExtra(HomePageActivity.USER_KEY) != null) {
             currentUser = new Gson().fromJson(getIntent().getStringExtra(HomePageActivity.USER_KEY), User.class);
         } else {
             Log.e("DirectoryActivity.onCreate()", "Error: No known User passed in.");
@@ -56,7 +56,7 @@ public class ClassroomActivity extends AppCompatActivity {
      * Retrieves teacher info and teacher announcements from the server.
      * @param classId (Type: int, the id of the class)
      */
-    public void getClassroomInfo(int classId) {
+    public void getClassroomInfo(final int classId) {
         Thread getClassInfoThread = new Thread(new CustomRun(this) {
             @Override
             public void run() {
@@ -67,7 +67,9 @@ public class ClassroomActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if ((jsonResponseTeach != null) && !jsonResponseTeach.equals("")) {
-                            String mockResponseTeach = "{'name': 'Mr. Test', 'className': '2nd Grade', 'classId': 0, 'email': 'test@blabla.com', 'phoneNum': 2083333333}";
+                            //MockResponse for teacher.
+                            String mockResponseTeach = MockResponses.GetTeacherById(classId);
+
                             teacher = new Gson().fromJson(mockResponseTeach/*jsonResponse*/, TeacherItem.class);
 
                             if ((currentUser != null) && (teacher.getClassId() == currentUser.getClassId()) &&
@@ -79,9 +81,9 @@ public class ClassroomActivity extends AppCompatActivity {
 
                             //Read in announcements
                             if ((jsonResponseAnnouncements != null) && !jsonResponseAnnouncements.equals("")) {
-                                String mockResponseAnnouncements = "{'announcements': [" +
-                                        "{'sender': 'Mr. Test', 'subject': 'test', 'message': 'test', 'sentDate': 0, 'dueDate': 0, 'isHomework': false}" +
-                                        "]}";
+                                //MockResponse for teacher announcements.
+                                String mockResponseAnnouncements = MockResponses.GetTeacherAnnouncements();
+
                                 announcements = new Gson().fromJson(mockResponseAnnouncements, ScheduleItemVector.class).getVector();
                             } else {
                                 announcements = new ArrayList<ScheduleItem>();

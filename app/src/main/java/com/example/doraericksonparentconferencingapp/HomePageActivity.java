@@ -227,6 +227,10 @@ public class HomePageActivity extends AppCompatActivity {
         Intent newClassroom = new Intent(this, ClassroomActivity.class);
         if (currentUser != null) {
             newClassroom.putExtra(USER_KEY, new Gson().toJson(currentUser));
+
+            if (currentUser.isAdmin()) {
+                newClassroom.putExtra(ClassroomActivity.CLASSROOM_ID_KEY, currentUser.getClassId());
+            }
         }
         startActivity(newClassroom);
     }
