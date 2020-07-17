@@ -13,6 +13,9 @@ import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
 /**
  * <h3></h3>HomePageActivity Activity</h3>
@@ -53,16 +56,14 @@ public class HomePageActivity extends AppCompatActivity {
                                 //Set user and set announcements.
 
                                 //mockResponse used in place of userJson for prototype.
-                                String mockResponse = "{'name': 'John Doe', 'email': 'JohnDoe@fakeEmail.com', " +
-                                        "'classroom': '', 'classId': 0, 'isAdmin': false, 'uniqueId': 'FakeId'}";
+                                String mockResponse = MockResponses.UserResponse(MainActivity.UNIQUE_ID);
 
                                 currentUser = new Gson().fromJson(mockResponse /*userJson*/, User.class);
 
-                                //This is for testing admin and teacher accounts.
-                                //currentUser.setIsAdmin(true);
-
                                 if (!currentUser.isAdmin()) {
                                     ((Button)findViewById(R.id.btn_Classroom)).setVisibility(View.GONE);
+                                } else {
+                                    ((Button)findViewById(R.id.btn_Classroom)).setVisibility(View.VISIBLE);
                                 }
 
                                 refreshAnnouncements();
@@ -94,30 +95,17 @@ public class HomePageActivity extends AppCompatActivity {
                 Gson convertJson = new Gson();
                 //Insert file path and variable keys.
                 String responseJson = new ServerRequest().request("", "");
-                final ScheduleItemVector updatedAnnouncements;
+                final ArrayList<ScheduleItem> updatedAnnouncements;
                 if ((responseJson != null) && (!responseJson.equals(""))) {
                     //mockResponse used in place of userJson for prototype.
-                    String mockResponse = "{'announcements': [" +
-                            "{'sender': 'admin1', 'subject': " +
-                            "'New School Policy', 'message': 'We will be implementing a new " +
-                            "school policy starting October 12, 2020. It requires students to " +
-                            "be on time to class.', 'sentDate': 1598652343, 'dueDate': 0, " +
-                            "'isHomework': false}," +
-                            "{'sender': 'admin1', 'subject': 'Welcome Back Event', 'message': " +
-                            "'The school will be hosting a welcome back event for the start of " +
-                            "the school year on September 4th.', 'sentDate': 1597356343, 'dueDate': " +
-                            "1599689143, 'isHomework': true}," +
-                            "{'sender': 'admin3', 'subject': 'PTO Meeting on August 24', 'message': " +
-                            "'We will be having a PTO meeting on August 24th to discuss the upcoming " +
-                            "school year.', 'sentDate': 1598652343, 'dueDate': 1598306743, " +
-                            "'isHomework': true}," +
-                            "{'sender': 'admin1', 'subject': 'Gradebook Changes', 'message': " +
-                            "'Starting September 4th, there will be changes to the Gradebook app. " +
-                            "Check PowerSchool for more details.', 'sentDate': 1598652343, " +
-                            "'dueDate': 0, 'isHomework': false}" +
-                            "]}";
-                     updatedAnnouncements = convertJson.fromJson(mockResponse/*responseJson*/,
-                            ScheduleItemVector.class);
+                    String mockResponse = MockResponses.GetAllAnnouncements();
+
+                    ArrayList<ScheduleItem> temp = convertJson.fromJson(mockResponse/*responseJson*/,
+                            ScheduleItemVector.class).getVector();
+                    sortScheduleItems(temp);
+
+                     updatedAnnouncements = temp;
+                     sortScheduleItems(updatedAnnouncements);
                 } else {
                     updatedAnnouncements = null;
                 }
@@ -126,10 +114,11 @@ public class HomePageActivity extends AppCompatActivity {
                 currentActivity.get().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if ((updatedAnnouncements != null) && (!updatedAnnouncements.getVector().isEmpty())) {
-                            announcements = updatedAnnouncements.getVector();
+                        if ((updatedAnnouncements != null) && (!updatedAnnouncements.isEmpty())) {
+                            announcements = updatedAnnouncements;
                             displayAnnouncements();
                         } else {
+                            announcements = new ArrayList<ScheduleItem>();
                             Toast error = Toast.makeText(currentActivity.get().getApplicationContext(),
                                     "Error getting announcements.", Toast.LENGTH_LONG);
                         }
@@ -154,14 +143,53 @@ public class HomePageActivity extends AppCompatActivity {
 
         for (ScheduleItem item: announcements) {
             if (item != null) {
+                Date itemDate = item.getDate();
+
+                if (item.getIsHomework()) {
+                    itemDate = item.getDueDate();
+                }
+
                 AnnouncementView newAnnouncement = new AnnouncementView(getApplicationContext(), false);
                 newAnnouncement.setSender(item.getSender());
                 newAnnouncement.setSubject(item.getSubject());
-                newAnnouncement.setSentDate(item.getDate());
+                newAnnouncement.setSentDate(itemDate);
                 newAnnouncement.setMessage(item.getMessage());
                 ((LinearLayout)findViewById(R.id.linLay_Announcements)).addView(newAnnouncement);
             }
         }
+    }
+
+
+    /**
+     * <h3>sortScheduleItems(ArrayList)<ScheduleItem> listToSort</h3>
+     * Sorts an ArrayList of ScheduleItems by date.
+     * @param listToSort (Type: ArrayList<ScheduleItem>, the list to sort)
+     */
+    public void sortScheduleItems(ArrayList<ScheduleItem> listToSort) {
+        Collections.sort(listToSort, new Comparator<ScheduleItem>() {
+            @Override
+            public int compare(ScheduleItem item1, ScheduleItem item2) {
+                Date item1Date = item1.getDate();
+                Date item2Date = item2.getDate();
+
+                if (item1.getIsHomework() == true) {
+                    item1Date = item1.getDueDate();
+                }
+
+                if (item2.getIsHomework() == true) {
+                    item2Date = item2.getDueDate();
+                }
+
+
+                if (item1Date.before(item2Date)) {
+                    return 1;
+                } else if (item2Date.before(item1Date)) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        });
     }
 
 
@@ -197,7 +225,9 @@ public class HomePageActivity extends AppCompatActivity {
      */
     public void startClassroomsActivity(View view) {
         Intent newClassroom = new Intent(this, ClassroomActivity.class);
-        newClassroom.putExtra(USER_KEY, new Gson().toJson(currentUser));
+        if (currentUser != null) {
+            newClassroom.putExtra(USER_KEY, new Gson().toJson(currentUser));
+        }
         startActivity(newClassroom);
     }
 
@@ -208,7 +238,9 @@ public class HomePageActivity extends AppCompatActivity {
      */
     public void startDirectoryActivity(View view) {
         Intent newDirectory = new Intent(this, DirectoryActivity.class);
-        newDirectory.putExtra(USER_KEY, new Gson().toJson(currentUser));
+        if (currentUser != null) {
+            newDirectory.putExtra(USER_KEY, new Gson().toJson(currentUser));
+        }
         startActivity(newDirectory);
     }
 
@@ -219,6 +251,9 @@ public class HomePageActivity extends AppCompatActivity {
      */
     public void startScheduleActivity(View view) {
         Intent newSchedule = new Intent(this, ScheduleActivity.class);
+        if (currentUser != null) {
+            newSchedule.putExtra(USER_KEY, new Gson().toJson(currentUser));
+        }
         startActivity(newSchedule);
     }
 
@@ -229,7 +264,9 @@ public class HomePageActivity extends AppCompatActivity {
      */
     public void startMessagesActivity(View view) {
         Intent newMessagesActivity = new Intent(this, MessagingActivity.class);
-        newMessagesActivity.putExtra(USER_KEY, new Gson().toJson(currentUser));
+        if (currentUser != null) {
+            newMessagesActivity.putExtra(USER_KEY, new Gson().toJson(currentUser));
+        }
         startActivity(newMessagesActivity);
     }
 
@@ -240,7 +277,9 @@ public class HomePageActivity extends AppCompatActivity {
      */
     public void startAccountActivity(View view) {
         Intent newViewProfile = new Intent(this, viewProfile.class);
-        newViewProfile.putExtra(USER_KEY, new Gson().toJson(currentUser));
+        if (currentUser != null) {
+            newViewProfile.putExtra(USER_KEY, new Gson().toJson(currentUser));
+        }
         startActivity(newViewProfile);
     }
 

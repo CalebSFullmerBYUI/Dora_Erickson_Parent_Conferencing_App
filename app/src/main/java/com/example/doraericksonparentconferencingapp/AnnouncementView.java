@@ -162,7 +162,7 @@ public class AnnouncementView extends ConstraintLayout {
         replies.setOrientation(LinearLayout.VERTICAL);
 
         ConstraintLayout.LayoutParams newLayout = new Constraints.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        newLayout.setMargins(15, 10, 0, 0);
+        newLayout.setMargins(45, 10, 0, 0);
         replies.setLayoutParams(newLayout);
     }
 

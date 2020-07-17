@@ -25,6 +25,11 @@ public class MainActivity extends AppCompatActivity {
         if ((UNIQUE_ID != null) && !UNIQUE_ID.equals("")) {
             //Check that server accepts id. if so, start home page activity.
         }
+
+
+        //For testing purposes
+        Toast testInstructionsToast = Toast.makeText(getApplicationContext(), "Enter admin to test as admin.", Toast.LENGTH_LONG);
+        testInstructionsToast.show();
     }
 
     public void recover (View view) {
@@ -38,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
     public void logIn(View view) {
         final EditText e1 = (EditText) findViewById(R.id.editText3);
         final EditText e2 = (EditText) findViewById(R.id.editText3);
-        String username = e1.toString();
-        String password = e2.toString();
+        final String username = e1.getText().toString();
+        String password = e2.getText().toString();
 
         /*SELECT *
         FROM usernameTable
@@ -54,8 +59,9 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if ((strJson != null) && !strJson.equals("")) {
-                            String mockUser = "{'name': 'John Doe', 'email': 'JohnDoe@fakeEmail.com', " +
-                                    "'classroom': '', 'classId': 0, 'isAdmin': false, 'uniqueId': 'FakeId'}";
+                            //Gets the appropriate mock response.
+                            String mockUser = MockResponses.UserResponse(username);
+
                             User newUser = new Gson().fromJson(mockUser/*strJson*/, User.class);
                             UNIQUE_ID = newUser.getUniqueId();
                             SharedPreferences.Editor newEditor = getSharedPreferences(ID_KEY, MODE_PRIVATE).edit();

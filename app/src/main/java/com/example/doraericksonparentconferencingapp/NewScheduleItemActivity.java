@@ -77,7 +77,7 @@ public class NewScheduleItemActivity extends AppCompatActivity {
 
 
 
-        if (getIntent().getStringArrayExtra(HomePageActivity.USER_KEY) != null) {
+        if (getIntent().getStringExtra(HomePageActivity.USER_KEY) != null) {
             currentUser = new Gson().fromJson(getIntent().getStringExtra(HomePageActivity.USER_KEY), User.class);
         } else {
             Log.e("DirectoryActivity.onCreate()", "Error: No known User passed in.");
