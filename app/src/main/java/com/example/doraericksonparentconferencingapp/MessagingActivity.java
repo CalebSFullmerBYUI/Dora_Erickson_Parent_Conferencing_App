@@ -296,6 +296,26 @@ public class MessagingActivity extends AppCompatActivity {
         onDrafts = false;
 
         displayMessages();
+
+
+        //Update the status of the unread messages from unread to read.
+        if (!unreadMessages.isEmpty()) {
+            final ArrayList<MessageItem> unread = unreadMessages;
+            Thread changeMessageStatusThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    String jsonResponse = new ServerRequest().request("", ""
+                            /*"?newlyReadMessages=" + new Gson().toJson(unread)*/);
+
+                    if ((jsonResponse == null) || jsonResponse.equals("")) {
+                        Log.e("MessagingActivity.viewUndreadMessages(View view)", "Issue updating message status.");
+                    }
+                }
+            });
+            changeMessageStatusThread.start();
+
+            unreadMessages = new ArrayList<MessageItem>();
+        }
     }
 
     /**
