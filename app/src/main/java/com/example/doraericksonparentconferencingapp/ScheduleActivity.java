@@ -149,7 +149,7 @@ public class ScheduleActivity extends AppCompatActivity {
             //Sunday
             dateLabel = parsingFormat.parse( Integer.toString(currentYear) + " " + Integer.toString(currentWeek) + " 7");
             ((TextView)findViewById(R.id.txtV_Sunday)).setText("Sunday " + formattingFormat.format(dateLabel));
-            label += (formattingFormat.format(dateLabel) + " - ");
+            label += (formattingFormat.format(dateLabel) + " -\n");
 
             //Monday
             dateLabel = parsingFormat.parse(Integer.toString(currentYear) + " " + Integer.toString(currentWeek) + " 1");
