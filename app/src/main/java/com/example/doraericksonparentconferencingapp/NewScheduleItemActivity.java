@@ -351,7 +351,7 @@ public class NewScheduleItemActivity extends AppCompatActivity implements Adapte
             return;
         }
 
-        newCalenderItem.setSubject(((TextView)findViewById(R.id.txt_Subject)).getText().toString());
+        newCalenderItem.setSubject(((TextView) findViewById(R.id.txt_EventName)).getText().toString());
         newCalenderItem.setDate(scheduleDate);
         newCalenderItem.setDueDate(scheduleDate);
     }
