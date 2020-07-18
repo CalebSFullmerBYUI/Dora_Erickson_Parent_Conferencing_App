@@ -314,7 +314,9 @@ public class MessagingActivity extends AppCompatActivity {
             });
             changeMessageStatusThread.start();
 
-            unreadMessages = new ArrayList<MessageItem>();
+            //This isn't particularly necessary for the prototype, but something similar may help
+            // reduce the change of server spam.
+            //unreadMessages = new ArrayList<MessageItem>();
         }
     }
 

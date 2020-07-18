@@ -8,28 +8,29 @@
 
     <Button
         android:id="@+id/btn_SaveCalenderItem"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="160dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="13dp"
+        android:onClick="save"
         android:text="Save"
         app:layout_constraintBottom_toTopOf="@+id/txt_EventName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btn_DeleteScheduleItem"
+        app:layout_constraintStart_toEndOf="@+id/spnr_AnnounceType"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btn_DeleteScheduleItem"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="13dp"
+        android:onClick="delete"
         android:text="Delete"
         app:layout_constraintBottom_toTopOf="@+id/txt_EventName"
-        app:layout_constraintEnd_toStartOf="@+id/btn_SaveCalenderItem"
+        app:layout_constraintEnd_toStartOf="@+id/spnr_AnnounceType"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -63,6 +64,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/divider13"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/spnr_Day"
         app:layout_constraintTop_toBottomOf="@+id/txt_EventName" />
@@ -72,6 +74,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/divider13"
         app:layout_constraintEnd_toStartOf="@+id/spnr_Year"
         app:layout_constraintStart_toEndOf="@+id/spnr_Month"
         app:layout_constraintTop_toBottomOf="@+id/txt_EventName" />
@@ -99,6 +102,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/divider13"
         app:layout_constraintEnd_toStartOf="@+id/spnr_Day"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_EventName" />
@@ -130,6 +134,7 @@
         android:layout_width="0dp"
         android:layout_height="2dp"
         android:background="#8F8F8F"
+        app:layout_constraintBottom_toTopOf="@+id/txtView_TimeLabel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -137,7 +142,7 @@
 
     <TextView
         android:id="@+id/txtView_TimeLabel"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="15dp"
@@ -146,6 +151,7 @@
         android:textColor="@android:color/black"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/spnr_Hour"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider13" />
 
@@ -196,5 +202,17 @@
         app:layout_constraintEnd_toStartOf="@+id/spnr_Minute"
         app:layout_constraintStart_toEndOf="@+id/spnr_Hour"
         app:layout_constraintTop_toBottomOf="@+id/divider13" />
+
+    <Spinner
+        android:id="@+id/spnr_AnnounceType"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="21dp"
+        app:layout_constraintBottom_toTopOf="@+id/divider11"
+        app:layout_constraintEnd_toStartOf="@+id/btn_SaveCalenderItem"
+        app:layout_constraintStart_toEndOf="@+id/btn_DeleteScheduleItem"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

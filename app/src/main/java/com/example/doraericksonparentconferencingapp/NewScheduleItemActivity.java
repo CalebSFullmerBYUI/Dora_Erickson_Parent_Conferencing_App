@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -23,11 +25,13 @@ import java.util.Date;
  *          This website discusses how to use the Android Studio Spinner view object.
  *      https://docs.microsoft.com/en-us/office/troubleshoot/excel/determine-a-leap-year
  *          This website discusses how to determine if a year is a leap year.
+ *      https://developer.android.com/guide/topics/ui/controls/spinner
+ *          This website discusses how to set a spinner's on item selected listener value.
  * @author Caleb Fullmer
- * @version 1.0
- * @since July 9, 2020
+ * @version 1.2
+ * @since July 17, 2020
  */
-public class NewScheduleItemActivity extends AppCompatActivity {
+public class NewScheduleItemActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     public static final String SCHEDULE_ITEM_NAME = "Schedule Item To View";
     public static final String IS_TEACHER_ANNOUNCE_KEY = "is teacher Announce_KEY";
     private ScheduleItem newCalenderItem = null;
@@ -41,6 +45,14 @@ public class NewScheduleItemActivity extends AppCompatActivity {
 
 
         //Set spinner adapters
+        //Announce_Type
+        Spinner announceTypeSpinner = ((Spinner)findViewById(R.id.spnr_AnnounceType));
+        ArrayAdapter<CharSequence> announceTypeAdapter = ArrayAdapter.createFromResource(this, R.array.announce_type_spinner_content,
+                android.R.layout.simple_spinner_item);
+        announceTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        announceTypeSpinner.setAdapter(announceTypeAdapter);
+        announceTypeSpinner.setOnItemSelectedListener(this);
+
         //Month
         Spinner monthSpinner = ((Spinner)findViewById(R.id.spnr_Month));
         ArrayAdapter<CharSequence> monthAdapter = ArrayAdapter.createFromResource(this, R.array.months_spinner_content, android.R.layout.simple_spinner_item);
@@ -92,6 +104,12 @@ public class NewScheduleItemActivity extends AppCompatActivity {
 
         //Check if this is a teacher announcement
         isTeacherAnnouncement = getIntent().getBooleanExtra(IS_TEACHER_ANNOUNCE_KEY, false);
+
+        if (isTeacherAnnouncement) {
+            ((Spinner)findViewById(R.id.spnr_AnnounceType)).setVisibility(View.VISIBLE);
+        } else {
+            ((Spinner)findViewById(R.id.spnr_AnnounceType)).setVisibility(View.INVISIBLE);
+        }
 
 
 
@@ -234,7 +252,7 @@ public class NewScheduleItemActivity extends AppCompatActivity {
     }
 
 
-    public void save() {
+    public void save(View view) {
         getScheduleItemData();
         final ScheduleItem constCalenderItem = newCalenderItem;
 
@@ -263,11 +281,12 @@ public class NewScheduleItemActivity extends AppCompatActivity {
 
                             if ((jsonResponse != null) && !jsonResponse.equals("")) {
                                 statusToast.setText("Event Saved");
+                                statusToast.show();
+                                finish();
                             } else {
                                 statusToast.setText("Issue saving event.");
+                                statusToast.show();
                             }
-
-                            statusToast.show();
                         }
                     });
                 }
@@ -280,7 +299,7 @@ public class NewScheduleItemActivity extends AppCompatActivity {
         }
     }
 
-    public void delete() {
+    public void delete(View view) {
         final ScheduleItem constCalenderItem = newCalenderItem;
 
         Thread deleteCalenderItemThread = new Thread(new CustomRun(this) {
@@ -302,6 +321,7 @@ public class NewScheduleItemActivity extends AppCompatActivity {
                         }
 
                         statusToast.show();
+                        finish();
                     }
                 });
             }
@@ -316,7 +336,13 @@ public class NewScheduleItemActivity extends AppCompatActivity {
      * Gets the user data for the schedule item.
      */
     private void getScheduleItemData() {
-        Date scheduleDate = getCorrectDate();
+        Date scheduleDate = null;
+
+        if ((((Spinner)findViewById(R.id.spnr_AnnounceType)).getSelectedItemPosition() == 1) && isTeacherAnnouncement) {
+            scheduleDate = new Date();
+        } else {
+            scheduleDate = getCorrectDate();
+        }
 
         //Give a toast and end the task if date is invalid.
         if (scheduleDate == null) {
@@ -496,5 +522,41 @@ public class NewScheduleItemActivity extends AppCompatActivity {
             Log.e("NewScheduleItemActivity.getCorrectDate()", "Invalid Date Entered.");
             return null;
         }
+    }
+
+
+
+
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (position == 1) {
+            (findViewById(R.id.txtView_DateLabel)).setVisibility(View.GONE);
+            (findViewById(R.id.spnr_Month)).setVisibility(View.GONE);
+            (findViewById(R.id.spnr_Day)).setVisibility(View.GONE);
+            (findViewById(R.id.spnr_Year)).setVisibility(View.GONE);
+            (findViewById(R.id.divider13)).setVisibility(View.GONE);
+            (findViewById(R.id.txtView_TimeLabel)).setVisibility(View.GONE);
+            (findViewById(R.id.spnr_Hour)).setVisibility(View.GONE);
+            (findViewById(R.id.txtView_Collen)).setVisibility(View.GONE);
+            (findViewById(R.id.spnr_Minute)).setVisibility(View.GONE);
+            (findViewById(R.id.spnr_AmPm)).setVisibility(View.GONE);
+        } else {
+            (findViewById(R.id.txtView_DateLabel)).setVisibility(View.VISIBLE);
+            (findViewById(R.id.spnr_Month)).setVisibility(View.VISIBLE);
+            (findViewById(R.id.spnr_Day)).setVisibility(View.VISIBLE);
+            (findViewById(R.id.spnr_Year)).setVisibility(View.VISIBLE);
+            (findViewById(R.id.divider13)).setVisibility(View.VISIBLE);
+            (findViewById(R.id.txtView_TimeLabel)).setVisibility(View.VISIBLE);
+            (findViewById(R.id.spnr_Hour)).setVisibility(View.VISIBLE);
+            (findViewById(R.id.txtView_Collen)).setVisibility(View.VISIBLE);
+            (findViewById(R.id.spnr_Minute)).setVisibility(View.VISIBLE);
+            (findViewById(R.id.spnr_AmPm)).setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        //Don't do anything.
     }
 }

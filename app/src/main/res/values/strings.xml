@@ -1,5 +1,12 @@
 <resources>
     <string name="app_name">Dora Erickson Parent Conferencing App</string>
+
+
+    <string-array name="announce_type_spinner_content">
+        <item>Homework</item>
+        <item>Announcement</item>
+    </string-array>
+
     
     <string-array name="months_spinner_content">
         <item>Month</item>

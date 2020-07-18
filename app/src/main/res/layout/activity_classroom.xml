@@ -6,6 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".ClassroomActivity">
 
+    <Button
+        android:id="@+id/btn_Subscribe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="3dp"
+        android:layout_marginBottom="3dp"
+        android:onClick="addSubscription"
+        android:text="Subscribe"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/txtView_ClassType"
+        app:layout_constraintEnd_toStartOf="@+id/btn_AddHomework"
+        app:layout_constraintStart_toEndOf="@+id/txtView_TeacherName"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
     <TextView
         android:id="@+id/txtView_TeacherName"
         android:layout_width="0dp"
@@ -16,7 +32,7 @@
         android:textColor="@android:color/black"
         android:textSize="28sp"
         app:layout_constraintBottom_toTopOf="@+id/txtView_ClassType"
-        app:layout_constraintEnd_toStartOf="@+id/btn_AddHomework"
+        app:layout_constraintEnd_toStartOf="@+id/btn_Subscribe"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -44,10 +60,10 @@
         android:layout_marginBottom="3dp"
         android:onClick="createNewAnnouncement"
         android:text="Add Homework"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/txtView_ClassType"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/txtView_TeacherName"
+        app:layout_constraintStart_toEndOf="@+id/btn_Subscribe"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View

@@ -171,8 +171,10 @@ public class ClassroomActivity extends AppCompatActivity {
     public void canEdit() {
         if (displayAsAdmin) {
             ((Button)findViewById(R.id.btn_AddHomework)).setVisibility(View.VISIBLE);
+            ((Button)findViewById(R.id.btn_Subscribe)).setVisibility(View.GONE);
         } else {
             ((Button)findViewById(R.id.btn_AddHomework)).setVisibility(View.GONE);
+            ((Button)findViewById(R.id.btn_Subscribe)).setVisibility(View.VISIBLE);
         }
     }
 
@@ -200,5 +202,42 @@ public class ClassroomActivity extends AppCompatActivity {
         }
 
         startActivity(newIntent);
+    }
+
+
+    /**
+     * <h3>addSubscription(View view)</h3>
+     * Adds a new teacher subscription to the user.
+     * @param view (Type: View, the View that called the method)
+     */
+    public void addSubscription(View view) {
+        if ((currentUser != null) && (teacher != null) && (currentUser.getClassId() != teacher.getClassId())) {
+            Thread newSubscriptionThread = new Thread(new CustomRun(this) {
+                @Override
+                public void run() {
+                    final String jsonResponse = new ServerRequest().request("", "");
+
+                    currentActivity.get().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String status = "";
+
+                            if ((jsonResponse != null) && !jsonResponse.equals("")) {
+                                status = "Subscription Added";
+                            } else {
+                                Log.e("ClassroomActivity.addSubscription()", "Issue adding subscription to server.");
+                                status = "Issue adding subscription.";
+                            }
+
+                            Toast statusToast = Toast.makeText(currentActivity.get().getApplicationContext(),
+                                    status, Toast.LENGTH_LONG);
+                            statusToast.show();
+                        }
+                    });
+                }
+            });
+
+            newSubscriptionThread.start();
+        }
     }
 }
