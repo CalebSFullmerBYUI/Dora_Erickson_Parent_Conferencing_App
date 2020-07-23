@@ -133,7 +133,7 @@ public class MockResponses {
             "{'name': 'Daniel Jenkins', 'className': '4th Grade', 'classId': 15, 'email': 'Daniel@fakeEmail.com', 'phoneNum': 2085555555}," +
             "{'name': 'John Peterson', 'className': 'Administration', 'classId': 16, 'email': 'John@fakeEmail.com', 'phoneNum': 2085555555}," +
             "{'name': 'Heather Oswald', 'className': 'Administration', 'classId': 17, 'email': 'Heather@fakeEmail.com', 'phoneNum': 2085555555}," +
-            "{'name': 'Andrew Jackson', 'className': 'Administration', 'classId': 19, 'email': 'Jackson@fakeEmail.com', 'phoneNum': 2085555555}," +
+            "{'name': 'Andrew Jackson', 'className': 'Administration', 'classId': 28, 'email': 'Jackson@fakeEmail.com', 'phoneNum': 2085555555}," +
             "{'name': 'Brixton Smith', 'className': '4th Grade', 'classId': 24, 'email': 'Brixton@fakeEmail.com', 'phoneNum': 2085555555}," +
             "{'name': 'Bethany Patton', 'className': '4th Grade', 'classId': 20, 'email': 'Patton@fakeEmail.com', 'phoneNum': 2085555555}," +
             "{'name': 'Dalton Latonson', 'className': '4th Grade', 'classId': 22, 'email': 'Dalton@fakeEmail.com', 'phoneNum': 2085555555}," +
@@ -349,6 +349,8 @@ public class MockResponses {
                 return "{'name': 'Vance Smith', 'className': '4th Grade', 'classId': 26, 'email': 'Vance@fakeEmail.com', 'phoneNum': 2085555555}";
             case 27:
                 return "{'name': 'Barney Lee', 'className': '4th Grade', 'classId': 27, 'email': 'Barney@fakeEmail.com', 'phoneNum': 2085555555}";
+            case 28:
+                return "{'name': 'Andrew Jackson', 'className': 'Administration', 'classId': 28, 'email': 'Jackson@fakeEmail.com', 'phoneNum': 2085555555},";
             default:
                 return "{'name': 'Null', 'className': 'Null', 'classId': -1, 'email': 'Null', 'phoneNum': 2085555555}";
         }

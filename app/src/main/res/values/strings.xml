@@ -7,6 +7,12 @@
         <item>Announcement</item>
     </string-array>
 
+
+    <string-array name="directory_view_style">
+        <item>Class Type</item>
+        <item>Teacher Name</item>
+    </string-array>
+
     
     <string-array name="months_spinner_content">
         <item>Month</item>

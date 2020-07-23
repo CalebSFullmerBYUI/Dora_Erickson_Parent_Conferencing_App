@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -39,17 +41,28 @@ import java.util.TreeMap;
  * @since June 23 2020
  * @version 1.1
  */
-public class DirectoryActivity extends AppCompatActivity {
+public class DirectoryActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     //Variables
     private ArrayList<TeacherItem> teachers = new ArrayList<TeacherItem>();
     private TreeMap<String, ArrayList<TeacherItem>> gradeSortTeachers =
             new TreeMap<String, ArrayList<TeacherItem>>();
     private User currentUser = null;
+    private boolean displayByName = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_directory);
+
+
+        Spinner viewTypeSpinner = ((Spinner)findViewById(R.id.spnr_ViewStyle));
+        ArrayAdapter<CharSequence> viewTypeAdapter = ArrayAdapter.createFromResource(this, R.array.directory_view_style,
+                android.R.layout.simple_spinner_item);
+        viewTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        viewTypeSpinner.setAdapter(viewTypeAdapter);
+        viewTypeSpinner.setOnItemSelectedListener(this);
+
+
 
         if (getIntent().getStringExtra(HomePageActivity.USER_KEY) != null) {
             currentUser = new Gson().fromJson(getIntent().getStringExtra(HomePageActivity.USER_KEY), User.class);
@@ -131,31 +144,51 @@ public class DirectoryActivity extends AppCompatActivity {
 
 
         //Iterate through bst and loop through each array.
-        for (Map.Entry<String, ArrayList<TeacherItem>> it: gradeSortTeachers.entrySet()) {
-            //Add data to be displayed as nessisary.
-            if ((it.getValue() != null) && !it.getValue().isEmpty()) {
-                GradeSectionView newGradeView = new GradeSectionView(getApplicationContext());
-                newGradeView.setLabel(it.getValue().get(0).getClassName());
+        if (displayByName == false) {
+            for (Map.Entry<String, ArrayList<TeacherItem>> it : gradeSortTeachers.entrySet()) {
+                //Add data to be displayed as nessisary.
+                if ((it.getValue() != null) && !it.getValue().isEmpty()) {
+                    GradeSectionView newGradeView = new GradeSectionView(getApplicationContext());
+                    newGradeView.setLabel(it.getValue().get(0).getClassName());
 
-                for (TeacherItem item: it.getValue()) {
-                    if (item != null) {
-                        Button newButton = new Button(getApplicationContext());
-                        /* Sets the button's tag to the teacher's class id. Used to specify
-                         * the correct class in the goToClassroom() method.
-                         */
-                        newButton.setTag(item.getClassId());
-                        newButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                goToClassroom(v);
-                            }
-                        });
+                    for (TeacherItem item : it.getValue()) {
+                        if (item != null) {
+                            Button newButton = new Button(getApplicationContext());
+                            /* Sets the button's tag to the teacher's class id. Used to specify
+                             * the correct class in the goToClassroom() method.
+                             */
+                            newButton.setTag(item.getClassId());
+                            newButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    goToClassroom(v);
+                                }
+                            });
 
-                        newGradeView.addTeacherBtn(item.getName(), newButton);
+                            newGradeView.addTeacherBtn(item.getName(), newButton);
+                        }
                     }
-                }
 
-                ((LinearLayout)findViewById(R.id.linLay_Directory)).addView(newGradeView);
+                    ((LinearLayout) findViewById(R.id.linLay_Directory)).addView(newGradeView);
+                }
+            }
+        } else {
+            for (TeacherItem item: teachers) {
+                if (item != null) {
+                    TeacherView newView = new TeacherView(getApplicationContext());
+                    newView.setClassName(item.getClassName());
+                    newView.setTeacherName(item.getName());
+                    newView.setEmail(item.getEmail());
+                    newView.setTag(item.getClassId());
+                    newView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            goToClassroom(v);
+                        }
+                    });
+
+                    ((LinearLayout) findViewById(R.id.linLay_Directory)).addView(newView);
+                }
             }
         }
     }
@@ -280,17 +313,19 @@ public class DirectoryActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (position == 0) {
+            displayByName = false;
+        } else {
+            displayByName = true;
+        }
 
-
-    //This would require a boolean variable to keep track of the desired setting.
-    /**
-     * <h3>switchDisplay(View view)</h3>
-     * Toggles between displaying teachers alphabetically or by class type.
-     * @param view (Type: View, the object which triggered the method)
-     */
-    /*
-    public void switchDisplay(View view) {
-
+        displayDirectory();
     }
-    */
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        //Do nothing
+    }
 }
