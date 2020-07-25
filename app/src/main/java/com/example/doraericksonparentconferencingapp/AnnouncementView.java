@@ -44,6 +44,8 @@ import java.util.Date;
  * @version 1.0
  */
 public class AnnouncementView extends ConstraintLayout {
+    private boolean showRecipient = true;
+
     private TextView sender = null;
     private TextView subject = null;
     private TextView sentDate = null;
@@ -70,6 +72,12 @@ public class AnnouncementView extends ConstraintLayout {
      */
     public AnnouncementView(Context context, boolean showRecipient) {
         super(context);
+
+        if (showRecipient) {
+            this.showRecipient = true;
+        } else {
+            this.showRecipient = false;
+        }
 
         //Set attributes for AnnouncementView
         makeAnnouncementView();
@@ -150,6 +158,13 @@ public class AnnouncementView extends ConstraintLayout {
 
         //Add constraints to layout.
         newConstraints.applyTo(this);
+
+
+
+        //Check if the recipient should be shown.
+        if (!showRecipient) {
+            recipient.setVisibility(View.GONE);
+        }
     }
 
     /**
