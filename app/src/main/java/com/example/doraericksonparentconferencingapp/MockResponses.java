@@ -148,6 +148,12 @@ public class MockResponses {
 
 
 
+    private static final String subscriptions = "{'teachers': [" +
+            "{'name': 'Andrew Jackson', 'className': 'Administration', 'classId': 28, 'email': 'Jackson@fakeEmail.com', 'phoneNum': 2085555555}, " +
+            "{'name': 'Bethany Oswald', 'className': 'Counselor', 'classId': 11, 'email': 'Bethany@fakeEmail.com', 'phoneNum': 2085555555}, " +
+            "{'name': 'Barney Lee', 'className': '4th Grade', 'classId': 27, 'email': 'Barney@fakeEmail.com', 'phoneNum': 2085555555}" +
+            "]}";
+
 
     private static final String messages = "{'messages': [" +
 
@@ -280,6 +286,16 @@ public class MockResponses {
      */
     public static String GetDrafts() {
         return drafts;
+    }
+
+
+    /**
+     * <h3>GetSubscriptions()</h3>
+     * Returns a TeacherItemVector Json response with all mock subscriptions.
+     * @return jsonResponse (Type: String, the TeacherItemVector Json response)
+     */
+    public static String GetSubscriptions() {
+        return subscriptions;
     }
 
 

@@ -51,6 +51,7 @@
                 android:layout_marginBottom="25dp"
                 android:onClick="removeSubscription"
                 android:text="Remove Subscription"
+                android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@+id/btn_ChangeUsername"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -69,8 +70,8 @@
 
             <ScrollView
                 android:id="@+id/scrView_Subscriptions"
-                android:layout_width="409dp"
-                android:layout_height="348dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
                 android:background="#C3C3C3"
                 app:layout_constraintBottom_toTopOf="@+id/btn_RemoveSubscription"
@@ -82,7 +83,43 @@
                     android:id="@+id/linLay_Subscriptions"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" />
+                    android:orientation="vertical">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/background_announc_view">
+
+                        <TextView
+                            android:id="@+id/textView12"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="14dp"
+                            android:layout_marginBottom="14dp"
+                            android:text="TextView"
+                            android:textColor="@android:color/black"
+                            android:textSize="18sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/button6"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <Button
+                            android:id="@+id/button6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginBottom="2dp"
+                            android:backgroundTint="#C8C8C8"
+                            android:text="Remove"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/textView12"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </LinearLayout>
             </ScrollView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
